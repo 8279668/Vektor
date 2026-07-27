@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заказ аккумуляторов VEKTOR</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f7fc;
+            margin: 0;
+            padding: 15px;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1a3b5d;
+            border-bottom: 2px solid #e9edf4;
+            padding-bottom: 10px;
+        }
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        th {
+            background: #1a3b5d;
+            color: white;
+            padding: 8px 4px;
+            text-align: center;
+            white-space: nowrap;
+        }
+        td {
+            padding: 6px 4px;
+            text-align: center;
+            border-bottom: 1px solid #e0e5ed;
+        }
+        tr:hover {
+            background: #f0f5ff;
+        }
+        .model {
+            font-weight: 600;
+            text-align: left;
+            white-space: nowrap;
+        }
+        .qty-input {
+            width: 55px;
+            padding: 4px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .qty-input:focus {
+            border-color: #1a3b5d;
+            outline: none;
+        }
+        .totals {
+            margin-top: 20px;
+            padding: 15px 20px;
+            background: #e9edf4;
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+        .totals span {
+            background: white;
+            padding: 6px 18px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .totals .highlight {
+            background: #1a3b5d;
+            color: white;
+        }
+        .actions {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+        .actions input,
+        .actions textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            flex: 1 1 180px;
+        }
+        .actions textarea {
+            flex: 1 1 100%;
+            resize: vertical;
+        }
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: white;
+        }
+        .btn-submit {
+            background: #2a7b3b;
+        }
+        .btn-submit:hover {
+            background: #1d5f2b;
+        }
+        .btn-round {
+            background: #1a3b5d;
+        }
+        .btn-round:hover {
+            background: #0e2a44;
+        }
+        .btn-clear {
+            background: #888;
+        }
+        .btn-clear:hover {
+            background: #666;
+        }
+        .footer-note {
+            margin-top: 25px;
+            font-size: 0.85em;
+            color: #888;
+            text-align: center;
+            border-top: 1px solid #e0e5ed;
+            padding-top: 15px;
+        }
+        .required {
+            color: #e74c3c;
+        }
+        .error-input {
+            border-color: #e74c3c !important;
+            background: #ffeeee;
+        }
+        .phone-mask {
+            font-size: 16px;
+            letter-spacing: 0.5px;
+        }
+        @media (max-width: 600px) {
+            th,
+            td {
+                font-size: 11px;
+                padding: 4px 2px;
+            }
+            .model {
+                font-size: 11px;
+            }
+            .qty-input {
+                width: 40px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="app">
+        <h1>🔋 Каталог аккумуляторов VEKTOR</h1>
+        <p>Выберите количество нужных позиций. Итоги по заказу рассчитываются автоматически. Цена указана с НДС 22%.</p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Модель</th>
+                        <th>Длина, м</th>
+                        <th>Ширина, м</th>
+                        <th>Высота, м</th>
+                        <th>шт/упак</th>
+                        <th>Вес, кг</th>
+                        <th>Кол-во</th>
+                        <th>Общий вес, кг</th>
+                        <th>Объем, м³</th>
+                        <th>Цена за 1 шт, ₽</th>
+                        <th>Итого, ₽</th>
+                    </tr>
+                </thead>
+                <tbody id="catalog-body">
+                    <!-- Данные будут вставлены из JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Итоги -->
+        <div class="totals" id="totals">
+            <span>💰 Итого цена (с НДС): <b id="total-price">0</b> ₽</span>
+            <span>⚖️ Общий вес: <b id="total-weight">0</b> кг</span>
+            <span>📦 Общий объем: <b id="total-volume">0</b> м³</span>
+            <span class="highlight">📦 Упаковок: <b id="total-packs">0</b> шт.</span>
+        </div>
+
+        <!-- Форма для заказа -->
+        <div style="margin-top:25px; background:#f8faff; padding:15px; border-radius:10px; border:1px solid #dce3ed;">
+            <h3 style="margin-top:0;">📩 Оформление заказа</h3>
+            <div class="actions">
+                <input type="text" id="clientCompany" placeholder="Название компании *" class="required-field" />
+                <input type="tel" id="clientPhone" placeholder="+7 (___) ___-____" class="phone-mask required-field" maxlength="18" />
+                <input type="text" id="clientName" placeholder="Контактное лицо (необязательно)" />
+            </div>
+            <div class="actions">
+                <input type="email" id="clientEmail" placeholder="Email (необязательно)" />
+                <textarea id="clientComment" rows="2" placeholder="Комментарий к заказу (адрес, особые пожелания)"></textarea>
+            </div>
+            <div class="actions" style="justify-content: flex-start;">
+                <button class="btn btn-submit" onclick="sendOrder()">📨 Оформить заказ</button>
+                <button class="btn btn-round" onclick="roundToPacks()">🔄 Округлить до упаковок</button>
+                <button class="btn btn-clear" onclick="clearAll()">🗑️ Очистить все</button>
+            </div>
+            <div style="margin-top: 10px; font-size: 0.9em; color: #888;">
+                <span class="required">*</span> — поля обязательные для заполнения
+            </div>
+        </div>
+
+        <div class="footer-note">
+            ⚡ Цены указаны с НДС 22%. Для оформления заказа нажмите "Оформить заказ".
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // 1. ДАННЫЕ ИЗ ВАШЕЙ ТАБЛИЦЫ (ЦЕНЫ С НДС 22%)
+        // ============================================================
+        const products = [
+            { model: 'VEKTOR VT 1204', length: 0.113, width: 0.070, height: 0.086, pack: 10, weight: 1.30, price: 985 },
+            { model: 'VEKTOR VT 1205.1', length: 0.119, width: 0.060, height: 0.129, pack: 10, weight: 1.77, price: 1260 },
+            { model: 'VEKTOR VT 1205', length: 0.113, width: 0.070, height: 0.105, pack: 10, weight: 1.64, price: 1190 },
+            { model: 'VEKTOR VT 1207', length: 0.150, width: 0.086, height: 0.094, pack: 8, weight: 2.40, price: 1430 },
+            { model: 'VEKTOR VT 1207.1', length: 0.113, width: 0.070, height: 0.130, pack: 8, weight: 2.15, price: 1530 },
+            { model: 'VEKTOR VT 1207.2', length: 0.113, width: 0.070, height: 0.107, pack: 10, weight: 2.02, price: 1635 },
+            { model: 'VEKTOR VT 1208', length: 0.150, width: 0.066, height: 0.095, pack: 10, weight: 2.25, price: 1710 },
+            { model: 'VEKTOR VT 1209', length: 0.150, width: 0.086, height: 0.107, pack: 8, weight: 2.93, price: 1825 },
+            { model: 'VEKTOR VT 1209.1', length: 0.151, width: 0.071, height: 0.107, pack: 8, weight: 2.65, price: 2050 },
+            { model: 'VEKTOR VT 1210', length: 0.137, width: 0.076, height: 0.134, pack: 8, weight: 2.70, price: 1820 },
+            { model: 'VEKTOR VT 1210.1', length: 0.150, width: 0.086, height: 0.094, pack: 8, weight: 2.85, price: 2150 },
+            { model: 'VEKTOR VT 1211', length: 0.151, width: 0.086, height: 0.112, pack: 8, weight: 3.36, price: 2690 },
+            { model: 'VEKTOR VT 1212', length: 0.150, width: 0.086, height: 0.130, pack: 6, weight: 3.87, price: 2145 },
+            { model: 'VEKTOR VT 1214', length: 0.150, width: 0.086, height: 0.140, pack: 6, weight: 4.78, price: 2820 },
+            { model: 'VEKTOR VT 1216', length: 0.205, width: 0.070, height: 0.162, pack: 4, weight: 5.42, price: 3690 },
+            { model: 'VEKTOR VT 1218', length: 0.177, width: 0.088, height: 0.155, pack: 4, weight: 6.20, price: 3800 },
+            { model: 'VEKTOR VT 12201', length: 0.177, width: 0.088, height: 0.155, pack: 4, weight: 6.20, price: 3800 },
+            { model: 'VEKTOR VT 1220', length: 0.205, width: 0.091, height: 0.159, pack: 4, weight: 6.78, price: 4150 },
+            { model: 'VEKTOR VT 1230', length: 0.166, width: 0.127, height: 0.175, pack: 2, weight: 9.10, price: 5250 },
+            { model: 'VEKTOR VTG 1214', length: 0.150, width: 0.086, height: 0.145, pack: 6, weight: 4.59, price: 3750 },
+            { model: 'VEKTOR VTG 1215', length: 0.150, width: 0.086, height: 0.145, pack: 6, weight: 4.59, price: 4010 },
+            { model: 'VEKTOR VTG 1218.1', length: 0.150, width: 0.086, height: 0.161, pack: 4, weight: 5.37, price: 4150 },
+            { model: 'VEKTOR VTG 1218', length: 0.175, width: 0.087, height: 0.154, pack: 4, weight: 6.20, price: 4490 },
+            { model: 'VEKTOR VTG 12201', length: 0.175, width: 0.087, height: 0.154, pack: 4, weight: 6.20, price: 5250 },
+            { model: 'VEKTOR VTG 1220', length: 0.205, width: 0.087, height: 0.162, pack: 4, weight: 7.50, price: 5950 },
+            { model: 'VEKTOR VTG 1230', length: 0.168, width: 0.127, height: 0.176, pack: 2, weight: 9.44, price: 7250 },
+            { model: 'HDV1204', length: 0.113, width: 0.070, height: 0.085, pack: 8, weight: 1.34, price: 1120 },
+            { model: 'HDV1205.1', length: 0.119, width: 0.060, height: 0.128, pack: 8, weight: 1.92, price: 1420 },
+            { model: 'HDV1205', length: 0.113, width: 0.070, height: 0.105, pack: 8, weight: 1.86, price: 1450 },
+            { model: 'HDV1207.2', length: 0.113, width: 0.070, height: 0.105, pack: 8, weight: 1.93, price: 1650 },
+            { model: 'HDV1206.5', length: 0.138, width: 0.066, height: 0.100, pack: 8, weight: 1.96, price: 1570 },
+            { model: 'HDV1207', length: 0.150, width: 0.087, height: 0.093, pack: 6, weight: 2.40, price: 1830 },
+            { model: 'HDV1210.1', length: 0.150, width: 0.087, height: 0.093, pack: 6, weight: 3.20, price: 2650 },
+            { model: 'HDV1208', length: 0.150, width: 0.065, height: 0.093, pack: 6, weight: 2.16, price: 1850 },
+            { model: 'HDV1207.1', length: 0.113, width: 0.070, height: 0.130, pack: 8, weight: 2.39, price: 1850 },
+            { model: 'HDV1209', length: 0.150, width: 0.087, height: 0.105, pack: 6, weight: 2.85, price: 2100 },
+            { model: 'HDV1211', length: 0.150, width: 0.087, height: 0.110, pack: 6, weight: 3.88, price: 3160 },
+            { model: 'HDV1212', length: 0.150, width: 0.087, height: 0.130, pack: 6, weight: 3.86, price: 2760 },
+            { model: 'HDV1212.2', length: 0.150, width: 0.070, height: 0.145, pack: 6, weight: 3.83, price: 2850 },
+            { model: 'HDV1214', length: 0.150, width: 0.087, height: 0.145, pack: 6, weight: 4.40, price: 3200 },
+            { model: 'HDV1215', length: 0.150, width: 0.087, height: 0.145, pack: 6, weight: 4.40, price: 3200 },
+            { model: 'HDV1214.1', length: 0.135, width: 0.087, height: 0.165, pack: 4, weight: 4.22, price: 3160 },
+            { model: 'HDV1218.1', length: 0.150, width: 0.087, height: 0.161, pack: 4, weight: 5.68, price: 4500 },
+            { model: 'HDV12201', length: 0.175, width: 0.087, height: 0.155, pack: 3, weight: 6.20, price: 4850 },
+            { model: 'HDV1220', length: 0.205, width: 0.087, height: 0.162, pack: 3, weight: 7.03, price: 4800 },
+            { model: 'HDV1218', length: 0.175, width: 0.087, height: 0.155, pack: 3, weight: 5.87, price: 4200 },
+            { model: 'HDV1230', length: 0.167, width: 0.127, height: 0.175, pack: 2, weight: 8.63, price: 5820 }
+        ];
+
+        // ============================================================
+        // 2. ОТРИСОВКА ТАБЛИЦЫ
+        // ============================================================
+        const tbody = document.getElementById('catalog-body');
+
+        function renderTable() {
+            let html = '';
+            products.forEach((p, index) => {
+                html += `
+                        <tr>
+                            <td class="model">${p.model}</td>
+                            <td>${p.length.toFixed(3)}</td>
+                            <td>${p.width.toFixed(3)}</td>
+                            <td>${p.height.toFixed(3)}</td>
+                            <td>${p.pack}</td>
+                            <td>${p.weight.toFixed(2)}</td>
+                            <td><input type="number" class="qty-input" id="qty-${index}" min="0" value="0" step="1" oninput="updateTotals()" /></td>
+                            <td id="row-weight-${index}">0</td>
+                            <td id="row-volume-${index}">0</td>
+                            <td>${p.price}</td>
+                            <td id="row-price-${index}">0</td>
+                        </tr>
+                    `;
+            });
+            tbody.innerHTML = html;
+            updateTotals();
+        }
+
+        // ============================================================
+        // 3. РАСЧЁТ ИТОГОВ
+        // ============================================================
+        function updateTotals() {
+            let totalWeight = 0,
+                totalVolume = 0,
+                totalPrice = 0,
+                totalPacks = 0;
+
+            products.forEach((p, index) => {
+                const qtyInput = document.getElementById(`qty-${index}`);
+                const qty = parseFloat(qtyInput.value) || 0;
+
+                const rowPrice = p.price * qty;
+                const rowWeight = p.weight * qty;
+                const rowVolume = p.length * p.width * p.height * qty;
+
+                document.getElementById(`row-price-${index}`).textContent = rowPrice.toFixed(0);
+                document.getElementById(`row-weight-${index}`).textContent = rowWeight.toFixed(2);
+                document.getElementById(`row-volume-${index}`).textContent = rowVolume.toFixed(4);
+
+                if (qty > 0) {
+                    totalPrice += rowPrice;
+                    totalWeight += rowWeight;
+                    totalVolume += rowVolume;
+                    totalPacks += Math.ceil(qty / p.pack);
+                }
+            });
+
+            document.getElementById('total-price').textContent = totalPrice.toFixed(0);
+            document.getElementById('total-weight').textContent = totalWeight.toFixed(2);
+            document.getElementById('total-volume').textContent = totalVolume.toFixed(4);
+            document.getElementById('total-packs').textContent = totalPacks;
+        }
+
+        // ============================================================
+        // 4. ОКРУГЛЕНИЕ ДО УПАКОВОК
+        // ============================================================
+        function roundToPacks() {
+            let changed = false;
+            products.forEach((p, index) => {
+                const qtyInput = document.getElementById(`qty-${index}`);
+                let qty = parseFloat(qtyInput.value) || 0;
+                if (qty > 0) {
+                    const rounded = Math.ceil(qty / p.pack) * p.pack;
+                    if (rounded !== qty) {
+                        qtyInput.value = rounded;
+                        changed = true;
+                    }
+                }
+            });
+            if (changed) {
+                updateTotals();
+                alert('✅ Количество округлено до полных упаковок.');
+            } else {
+                alert('ℹ️ Все позиции уже кратны упаковкам или корзина пуста.');
+            }
+        }
+
+        // ============================================================
+        // 5. ВАЛИДАЦИЯ ФОРМЫ
+        // ============================================================
+        function validateForm() {
+            const company = document.getElementById('clientCompany').value.trim();
+            const phoneRaw = document.getElementById('clientPhone').value.trim();
+
+            if (!company) {
+                alert('⚠️ Пожалуйста, укажите название компании.');
+                document.getElementById('clientCompany').classList.add('error-input');
+                return false;
+            }
+            document.getElementById('clientCompany').classList.remove('error-input');
+
+            const phoneDigits = phoneRaw.replace(/\D/g, '');
+            if (phoneDigits.length !== 11) {
+                alert('⚠️ Введите номер телефона в формате +7 (XXX) XXX-XXXX (11 цифр).');
+                document.getElementById('clientPhone').classList.add('error-input');
+                return false;
+            }
+            document.getElementById('clientPhone').classList.remove('error-input');
+
+            return true;
+        }
+
+        // ============================================================
+        // 6. МАСКА ВВОДА ТЕЛЕФОНА
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneInput = document.getElementById('clientPhone');
+
+            phoneInput.addEventListener('input', function(e) {
+                let value = this.value.replace(/\D/g, '');
+                if (value.length > 11) value = value.slice(0, 11);
+
+                let formatted = '+7 ';
+                if (value.length > 1) {
+                    formatted += '(' + value.slice(1, 4);
+                }
+                if (value.length >= 4) {
+                    formatted += ') ' + value.slice(4, 7);
+                }
+                if (value.length >= 7) {
+                    formatted += '-' + value.slice(7, 9);
+                }
+                if (value.length >= 9) {
+                    formatted += '-' + value.slice(9, 11);
+                }
+                this.value = formatted;
+            });
+
+            phoneInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace') {
+                    const pos = this.selectionStart;
+                    if (pos > 0 && this.value[pos - 1] === ' ') {
+                        this.value = this.value.slice(0, pos - 1);
+                        this.selectionStart = pos - 1;
+                        this.selectionEnd = pos - 1;
+                    }
+                }
+            });
+        });
+
+        // ============================================================
+        // 7. ФОРМИРОВАНИЕ И ОТПРАВКА ЗАКАЗА
+        // ============================================================
+        function sendOrder() {
+            if (!validateForm()) return;
+
+            const company = document.getElementById('clientCompany').value.trim();
+            const phone = document.getElementById('clientPhone').value.trim();
+            const name = document.getElementById('clientName').value.trim() || 'Не указано';
+            const email = document.getElementById('clientEmail').value.trim() || 'Не указан';
+            const comment = document.getElementById('clientComment').value.trim() || '';
+
+            let hasItems = false;
+            let totalWeight = 0,
+                totalVolume = 0,
+                totalPrice = 0,
+                totalPacks = 0;
+            let orderDetails = '';
+
+            products.forEach((p, index) => {
+                const qtyInput = document.getElementById(`qty-${index}`);
+                const qty = parseFloat(qtyInput.value) || 0;
+                if (qty > 0) {
+                    hasItems = true;
+                    const rowPrice = p.price * qty;
+                    const rowWeight = p.weight * qty;
+                    const rowVolume = p.length * p.width * p.height * qty;
+                    const packs = Math.ceil(qty / p.pack);
+
+                    totalPrice += rowPrice;
+                    totalWeight += rowWeight;
+                    totalVolume += rowVolume;
+                    totalPacks += packs;
+
+                    orderDetails +=
+                        `${p.model} | ${qty} шт. (${packs} упак.) | ${rowPrice} ₽ | вес: ${rowWeight.toFixed(2)} кг | объем: ${rowVolume.toFixed(4)} м³\n`;
+                }
+            });
+
+            if (!hasItems) {
+                alert('⚠️ Корзина пуста! Добавьте товары.');
+                return;
+            }
+
+            let emailBody = '🔋 НОВЫЙ ЗАКАЗ АККУМУЛЯТОРОВ\n';
+            emailBody += '='.repeat(55) + '\n';
+            emailBody += `🏢 Компания: ${company}\n`;
+            emailBody += `👤 Контакт: ${name}\n`;
+            emailBody += `📞 Телефон: ${phone}\n`;
+            emailBody += `📧 Email: ${email}\n`;
+            if (comment) emailBody += `📝 Комментарий: ${comment}\n`;
+            emailBody += '\n📦 Состав заказа:\n';
+            emailBody += '-'.repeat(55) + '\n';
+            emailBody += orderDetails;
+            emailBody += '-'.repeat(55) + '\n';
+            emailBody += `💰 ИТОГО (с НДС 22%): ${totalPrice.toFixed(0)} ₽\n`;
+            emailBody += `⚖️ Общий вес: ${totalWeight.toFixed(2)} кг\n`;
+            emailBody += `📦 Общий объем: ${totalVolume.toFixed(4)} м³\n`;
+            emailBody += `📦 Количество упаковок: ${totalPacks}\n`;
+            emailBody += '='.repeat(55) + '\n';
+            emailBody += 'Спасибо за заказ!';
+
+            const btn = document.querySelector('.btn-submit');
+            btn.disabled = true;
+            btn.textContent = '⏳ Отправка...';
+
+            const scriptURL =
+                'https://script.google.com/macros/s/AKfycbyNo08JZ2mKPvIDOcgAjQGqYzStwv0G5aWKiZTSB-20CZtlFAd_QkhwCxjyPGQX2Fz9/exec';
+
+            fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        'company': company,
+                        'contact': name,
+                        'phone': phone,
+                        'email': email,
+                        'comment': comment,
+                        'order': emailBody
+                    })
+                })
+                .then(() => {
+                    alert('✅ Заказ успешно отправлен!');
+                    clearAll();
+                })
+                .catch(() => {
+                    alert('❌ Ошибка при отправке. Попробуйте еще раз.');
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.textContent = '📨 Оформить заказ';
+                });
+        }
+
+        // ============================================================
+        // 8. ОЧИСТКА
+        // ============================================================
+        function clearAll() {
+            products.forEach((_, index) => {
+                document.getElementById(`qty-${index}`).value = 0;
+            });
+            document.getElementById('clientCompany').value = '';
+            document.getElementById('clientPhone').value = '+7 ';
+            document.getElementById('clientName').value = '';
+            document.getElementById('clientEmail').value = '';
+            document.getElementById('clientComment').value = '';
+            document.getElementById('clientCompany').classList.remove('error-input');
+            document.getElementById('clientPhone').classList.remove('error-input');
+            updateTotals();
+        }
+
+        // ============================================================
+        // 9. ЗАПУСК
+        // ============================================================
+        renderTable();
+
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+            }
+        });
+    </script>
+
+</body>
+</html>
