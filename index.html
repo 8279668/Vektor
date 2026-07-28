@@ -9,26 +9,58 @@
             box-sizing: border-box;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: #f4f7fc;
             margin: 0;
             padding: 15px;
+            padding-bottom: 90px; /* Отступ для липкой панели итогов */
+            color: #2c3e50;
         }
         .container {
             max-width: 1300px;
             margin: 0 auto;
             background: white;
-            padding: 20px;
+            padding: 24px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
         }
-        h1 {
+        .header-title {
+            margin-top: 0;
             color: #1a3b5d;
             border-bottom: 2px solid #e9edf4;
-            padding-bottom: 10px;
+            padding-bottom: 12px;
+            font-size: 1.8rem;
         }
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        
+        /* Поиск и фильтрация */
+        .search-box {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #1a3b5d;
+            box-shadow: 0 0 0 3px rgba(26, 59, 93, 0.1);
+        }
+
+        /* Таблица */
         .table-wrap {
             overflow-x: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
         }
         table {
             width: 100%;
@@ -38,133 +70,241 @@
         th {
             background: #1a3b5d;
             color: white;
-            padding: 8px 4px;
+            padding: 10px 6px;
             text-align: center;
             white-space: nowrap;
+            font-weight: 600;
         }
         td {
-            padding: 6px 4px;
+            padding: 8px 6px;
             text-align: center;
-            border-bottom: 1px solid #e0e5ed;
+            border-bottom: 1px solid #e2e8f0;
         }
         tr:hover {
-            background: #f0f5ff;
+            background: #f8fafc;
         }
         .model {
             font-weight: 600;
             text-align: left;
             white-space: nowrap;
+            color: #0f172a;
+        }
+
+        /* Кнопки управления количеством +/- */
+        .qty-control {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #fff;
+        }
+        .qty-btn {
+            background: #f1f5f9;
+            border: none;
+            width: 28px;
+            height: 28px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #334155;
+            cursor: pointer;
+            transition: background 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+        .qty-btn:hover {
+            background: #e2e8f0;
+        }
+        .qty-btn:active {
+            background: #cbd5e1;
         }
         .qty-input {
-            width: 55px;
-            padding: 4px;
+            width: 42px;
+            height: 28px;
+            padding: 0;
             text-align: center;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: none;
+            border-left: 1px solid #cbd5e1;
+            border-right: 1px solid #cbd5e1;
+            font-size: 13px;
+            font-weight: 600;
+            -moz-appearance: textfield;
+        }
+        .qty-input::-webkit-outer-spin-button,
+        .qty-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
         .qty-input:focus {
-            border-color: #1a3b5d;
             outline: none;
+            background: #f0fdf4;
         }
-        .totals {
-            margin-top: 20px;
-            padding: 15px 20px;
-            background: #e9edf4;
-            border-radius: 8px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            font-weight: 600;
-            font-size: 1.05em;
-        }
-        .totals span {
-            background: white;
-            padding: 6px 18px;
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .totals .highlight {
+
+        /* Закрепленная (sticky) панель итогов */
+        .sticky-totals {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
             background: #1a3b5d;
             color: white;
+            padding: 12px 20px;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+        }
+        .totals-content {
+            max-width: 1300px;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        .totals-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            font-size: 0.95rem;
+        }
+        .total-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .total-item b {
+            color: #38bdf8;
+            font-size: 1.1rem;
+        }
+        .total-price-item b {
+            color: #4ade80;
+            font-size: 1.25rem;
+        }
+
+        /* Секция оформления заказа */
+        .order-section {
+            margin-top: 30px;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        .order-section h3 {
+            margin-top: 0;
+            color: #1a3b5d;
+            margin-bottom: 15px;
         }
         .actions {
-            margin-top: 20px;
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
-            align-items: center;
+            margin-bottom: 12px;
         }
         .actions input,
         .actions textarea {
-            padding: 10px;
-            border: 1px solid #ccc;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
             border-radius: 6px;
             font-size: 14px;
-            flex: 1 1 180px;
+            flex: 1 1 200px;
+            transition: border-color 0.2s;
+        }
+        .actions input:focus,
+        .actions textarea:focus {
+            outline: none;
+            border-color: #1a3b5d;
         }
         .actions textarea {
             flex: 1 1 100%;
             resize: vertical;
         }
+
+        /* Кнопки */
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+        }
         .btn {
-            padding: 12px 28px;
+            padding: 12px 24px;
             border: none;
             border-radius: 8px;
-            font-weight: 700;
-            font-size: 15px;
+            font-weight: 600;
+            font-size: 14px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s;
             color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         .btn-submit {
-            background: #2a7b3b;
+            background: #16a34a;
         }
         .btn-submit:hover {
-            background: #1d5f2b;
+            background: #15803d;
         }
         .btn-round {
-            background: #1a3b5d;
+            background: #0284c7;
         }
         .btn-round:hover {
-            background: #0e2a44;
+            background: #0369a1;
         }
         .btn-clear {
-            background: #888;
+            background: #64748b;
         }
         .btn-clear:hover {
-            background: #666;
+            background: #475569;
         }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Валидация */
+        .required {
+            color: #ef4444;
+        }
+        .error-input {
+            border-color: #ef4444 !important;
+            background-color: #fef2f2 !important;
+        }
+
         .footer-note {
             margin-top: 25px;
             font-size: 0.85em;
-            color: #888;
+            color: #64748b;
             text-align: center;
-            border-top: 1px solid #e0e5ed;
+            border-top: 1px solid #e2e8f0;
             padding-top: 15px;
         }
-        .required {
-            color: #e74c3c;
-        }
-        .error-input {
-            border-color: #e74c3c !important;
-            background: #ffeeee;
-        }
-        .phone-mask {
-            font-size: 16px;
-            letter-spacing: 0.5px;
-        }
-        @media (max-width: 600px) {
-            th,
-            td {
-                font-size: 11px;
-                padding: 4px 2px;
+
+        /* Адаптивность для мобильных */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                padding-bottom: 130px;
             }
-            .model {
-                font-size: 11px;
+            .container {
+                padding: 15px;
             }
-            .qty-input {
-                width: 40px;
-                font-size: 11px;
+            .totals-content {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .totals-grid {
+                justify-content: space-between;
+                font-size: 0.85rem;
+            }
+            .qty-control {
+                scale: 0.9;
             }
         }
     </style>
@@ -172,8 +312,13 @@
 <body>
 
     <div class="container" id="app">
-        <h1>🔋 Каталог аккумуляторов VEKTOR</h1>
-        <p>Выберите количество нужных позиций. Итоги по заказу рассчитываются автоматически. Цена указана с НДС 22%.</p>
+        <h1 class="header-title">🔋 Каталог аккумуляторов VEKTOR</h1>
+        <p class="subtitle">Выберите количество нужных позиций. Итоги по заказу рассчитываются автоматически. Цена указана с НДС 22%.</p>
+
+        <!-- Поиск моделей -->
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Быстрый поиск по названию модели..." oninput="filterCatalog()" />
+        </div>
 
         <div class="table-wrap">
             <table>
@@ -198,38 +343,42 @@
             </table>
         </div>
 
-        <!-- Итоги -->
-        <div class="totals" id="totals">
-            <span>💰 Итого цена (с НДС): <b id="total-price">0</b> ₽</span>
-            <span>⚖️ Общий вес: <b id="total-weight">0</b> кг</span>
-            <span>📦 Общий объем: <b id="total-volume">0</b> м³</span>
-            <span class="highlight">📦 Упаковок: <b id="total-packs">0</b> шт.</span>
-        </div>
-
         <!-- Форма для заказа -->
-        <div style="margin-top:25px; background:#f8faff; padding:15px; border-radius:10px; border:1px solid #dce3ed;">
-            <h3 style="margin-top:0;">📩 Оформление заказа</h3>
+        <div class="order-section">
+            <h3>📩 Оформление заказа</h3>
             <div class="actions">
                 <input type="text" id="clientCompany" placeholder="Название компании *" class="required-field" />
-                <input type="tel" id="clientPhone" placeholder="+7 (___) ___-____" class="phone-mask required-field" maxlength="18" />
+                <input type="tel" id="clientPhone" placeholder="+7 (___) ___-__-__" class="phone-mask required-field" maxlength="18" />
                 <input type="text" id="clientName" placeholder="Контактное лицо (необязательно)" />
             </div>
             <div class="actions">
                 <input type="email" id="clientEmail" placeholder="Email (необязательно)" />
-                <textarea id="clientComment" rows="2" placeholder="Комментарий к заказу (адрес, особые пожелания)"></textarea>
+                <textarea id="clientComment" rows="2" placeholder="Комментарий к заказу (адрес доставки, особые пожелания)"></textarea>
             </div>
-            <div class="actions" style="justify-content: flex-start;">
+            <div class="btn-group">
                 <button class="btn btn-submit" onclick="sendOrder()">📨 Оформить заказ</button>
                 <button class="btn btn-round" onclick="roundToPacks()">🔄 Округлить до упаковок</button>
                 <button class="btn btn-clear" onclick="clearAll()">🗑️ Очистить все</button>
             </div>
-            <div style="margin-top: 10px; font-size: 0.9em; color: #888;">
+            <div style="margin-top: 12px; font-size: 0.85em; color: #64748b;">
                 <span class="required">*</span> — поля обязательные для заполнения
             </div>
         </div>
 
         <div class="footer-note">
             ⚡ Цены указаны с НДС 22%. Для оформления заказа нажмите "Оформить заказ".
+        </div>
+    </div>
+
+    <!-- Липкая панель итогов (Sticky Footer) -->
+    <div class="sticky-totals">
+        <div class="totals-content">
+            <div class="totals-grid">
+                <div class="total-item total-price-item">💰 Итого (с НДС): <b id="total-price">0</b> ₽</div>
+                <div class="total-item">⚖️ Вес: <b id="total-weight">0</b> кг</div>
+                <div class="total-item">📦 Объем: <b id="total-volume">0</b> м³</div>
+                <div class="total-item">📦 Упаковок: <b id="total-packs">0</b> шт.</div>
+            </div>
         </div>
     </div>
 
@@ -287,32 +436,61 @@
             { model: 'HDV1230', length: 0.167, width: 0.127, height: 0.175, pack: 2, weight: 8.63, price: 5820 }
         ];
 
-        // ============================================================
-        // 2. ОТРИСОВКА ТАБЛИЦЫ
-        // ============================================================
         const tbody = document.getElementById('catalog-body');
 
+        // ============================================================
+        // 2. ОТРИСОВКА ТАБЛИЦЫ C КНОПКАМИ +/-
+        // ============================================================
         function renderTable() {
             let html = '';
             products.forEach((p, index) => {
                 html += `
-                        <tr>
-                            <td class="model">${p.model}</td>
-                            <td>${p.length.toFixed(3)}</td>
-                            <td>${p.width.toFixed(3)}</td>
-                            <td>${p.height.toFixed(3)}</td>
-                            <td>${p.pack}</td>
-                            <td>${p.weight.toFixed(2)}</td>
-                            <td><input type="number" class="qty-input" id="qty-${index}" min="0" value="0" step="1" oninput="updateTotals()" /></td>
-                            <td id="row-weight-${index}">0</td>
-                            <td id="row-volume-${index}">0</td>
-                            <td>${p.price}</td>
-                            <td id="row-price-${index}">0</td>
-                        </tr>
-                    `;
+                    <tr id="row-${index}">
+                        <td class="model">${p.model}</td>
+                        <td>${p.length.toFixed(3)}</td>
+                        <td>${p.width.toFixed(3)}</td>
+                        <td>${p.height.toFixed(3)}</td>
+                        <td>${p.pack}</td>
+                        <td>${p.weight.toFixed(2)}</td>
+                        <td>
+                            <div class="qty-control">
+                                <button type="button" class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
+                                <input type="number" class="qty-input" id="qty-${index}" min="0" value="0" step="1" oninput="updateTotals()" />
+                                <button type="button" class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+                            </div>
+                        </td>
+                        <td id="row-weight-${index}">0</td>
+                        <td id="row-volume-${index}">0</td>
+                        <td>${p.price.toLocaleString('ru-RU')}</td>
+                        <td id="row-price-${index}">0</td>
+                    </tr>
+                `;
             });
             tbody.innerHTML = html;
             updateTotals();
+        }
+
+        // Изменение количества по кнопкам + и -
+        function changeQty(index, delta) {
+            const qtyInput = document.getElementById(`qty-${index}`);
+            let val = parseInt(qtyInput.value) || 0;
+            val += delta;
+            if (val < 0) val = 0;
+            qtyInput.value = val;
+            updateTotals();
+        }
+
+        // Фильтрация каталога
+        function filterCatalog() {
+            const filter = document.getElementById('searchInput').value.toLowerCase().trim();
+            products.forEach((p, index) => {
+                const row = document.getElementById(`row-${index}`);
+                if (p.model.toLowerCase().includes(filter)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
         }
 
         // ============================================================
@@ -332,7 +510,7 @@
                 const rowWeight = p.weight * qty;
                 const rowVolume = p.length * p.width * p.height * qty;
 
-                document.getElementById(`row-price-${index}`).textContent = rowPrice.toFixed(0);
+                document.getElementById(`row-price-${index}`).textContent = rowPrice.toLocaleString('ru-RU');
                 document.getElementById(`row-weight-${index}`).textContent = rowWeight.toFixed(2);
                 document.getElementById(`row-volume-${index}`).textContent = rowVolume.toFixed(4);
 
@@ -344,7 +522,7 @@
                 }
             });
 
-            document.getElementById('total-price').textContent = totalPrice.toFixed(0);
+            document.getElementById('total-price').textContent = totalPrice.toLocaleString('ru-RU');
             document.getElementById('total-weight').textContent = totalWeight.toFixed(2);
             document.getElementById('total-volume').textContent = totalVolume.toFixed(4);
             document.getElementById('total-packs').textContent = totalPacks;
@@ -384,14 +562,16 @@
             if (!company) {
                 alert('⚠️ Пожалуйста, укажите название компании.');
                 document.getElementById('clientCompany').classList.add('error-input');
+                document.getElementById('clientCompany').focus();
                 return false;
             }
             document.getElementById('clientCompany').classList.remove('error-input');
 
             const phoneDigits = phoneRaw.replace(/\D/g, '');
             if (phoneDigits.length !== 11) {
-                alert('⚠️ Введите номер телефона в формате +7 (XXX) XXX-XXXX (11 цифр).');
+                alert('⚠️ Введите номер телефона в формате +7 (XXX) XXX-XX-XX (11 цифр).');
                 document.getElementById('clientPhone').classList.add('error-input');
+                document.getElementById('clientPhone').focus();
                 return false;
             }
             document.getElementById('clientPhone').classList.remove('error-input');
@@ -400,13 +580,15 @@
         }
 
         // ============================================================
-        // 6. МАСКА ВВОДА ТЕЛЕФОНА
+        // 6. УЛУЧШЕННАЯ МАСКА ВВОДА ТЕЛЕФОНА
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             const phoneInput = document.getElementById('clientPhone');
 
-            phoneInput.addEventListener('input', function(e) {
+            phoneInput.addEventListener('input', function() {
                 let value = this.value.replace(/\D/g, '');
+                if (value.startsWith('8')) value = '7' + value.slice(1);
+                if (!value.startsWith('7') && value.length > 0) value = '7' + value;
                 if (value.length > 11) value = value.slice(0, 11);
 
                 let formatted = '+7 ';
@@ -423,17 +605,6 @@
                     formatted += '-' + value.slice(9, 11);
                 }
                 this.value = formatted;
-            });
-
-            phoneInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Backspace') {
-                    const pos = this.selectionStart;
-                    if (pos > 0 && this.value[pos - 1] === ' ') {
-                        this.value = this.value.slice(0, pos - 1);
-                        this.selectionStart = pos - 1;
-                        this.selectionEnd = pos - 1;
-                    }
-                }
             });
         });
 
@@ -472,32 +643,48 @@
                     totalPacks += packs;
 
                     orderDetails +=
-                        `${p.model} | ${qty} шт. (${packs} упак.) | ${rowPrice} ₽ | вес: ${rowWeight.toFixed(2)} кг | объем: ${rowVolume.toFixed(4)} м³\n`;
+                        `${p.model} | ${qty} шт. (${packs} упак.) | ${rowPrice.toLocaleString('ru-RU')} ₽ | вес: ${rowWeight.toFixed(2)} кг | объем: ${rowVolume.toFixed(4)} м³
+`;
                 }
             });
 
             if (!hasItems) {
-                alert('⚠️ Корзина пуста! Добавьте товары.');
+                alert('⚠️ Корзина пуста! Выберите хотя бы один товар перед отправкой.');
                 return;
             }
 
-            let emailBody = '🔋 НОВЫЙ ЗАКАЗ АККУМУЛЯТОРОВ\n';
-            emailBody += '='.repeat(55) + '\n';
-            emailBody += `🏢 Компания: ${company}\n`;
-            emailBody += `👤 Контакт: ${name}\n`;
-            emailBody += `📞 Телефон: ${phone}\n`;
-            emailBody += `📧 Email: ${email}\n`;
-            if (comment) emailBody += `📝 Комментарий: ${comment}\n`;
-            emailBody += '\n📦 Состав заказа:\n';
-            emailBody += '-'.repeat(55) + '\n';
+            let emailBody = '🔋 НОВЫЙ ЗАКАЗ АККУМУЛЯТОРОВ
+';
+            emailBody += '='.repeat(55) + '
+';
+            emailBody += `🏢 Компания: ${company}
+`;
+            emailBody += `👤 Контакт: ${name}
+`;
+            emailBody += `📞 Телефон: ${phone}
+`;
+            emailBody += `📧 Email: ${email}
+`;
+            if (comment) emailBody += `📝 Комментарий: ${comment}
+`;
+            emailBody += '
+📦 Состав заказа:
+';
+            emailBody += '-'.repeat(55) + '
+';
             emailBody += orderDetails;
-            emailBody += '-'.repeat(55) + '\n';
-            emailBody += `💰 ИТОГО (с НДС 22%): ${totalPrice.toFixed(0)} ₽\n`;
-            emailBody += `⚖️ Общий вес: ${totalWeight.toFixed(2)} кг\n`;
-            emailBody += `📦 Общий объем: ${totalVolume.toFixed(4)} м³\n`;
-            emailBody += `📦 Количество упаковок: ${totalPacks}\n`;
-            emailBody += '='.repeat(55) + '\n';
-            emailBody += 'Спасибо за заказ!';
+            emailBody += '-'.repeat(55) + '
+';
+            emailBody += `💰 ИТОГО (с НДС 22%): ${totalPrice.toLocaleString('ru-RU')} ₽
+`;
+            emailBody += `⚖️ Общий вес: ${totalWeight.toFixed(2)} кг
+`;
+            emailBody += `📦 Общий объем: ${totalVolume.toFixed(4)} м³
+`;
+            emailBody += `📦 Количество упаковок: ${totalPacks}
+`;
+            emailBody += '='.repeat(55) + '
+';
 
             const btn = document.querySelector('.btn-submit');
             btn.disabled = true;
@@ -542,10 +729,12 @@
                 document.getElementById(`qty-${index}`).value = 0;
             });
             document.getElementById('clientCompany').value = '';
-            document.getElementById('clientPhone').value = '+7 ';
+            document.getElementById('clientPhone').value = '';
             document.getElementById('clientName').value = '';
             document.getElementById('clientEmail').value = '';
             document.getElementById('clientComment').value = '';
+            document.getElementById('searchInput').value = '';
+            filterCatalog();
             document.getElementById('clientCompany').classList.remove('error-input');
             document.getElementById('clientPhone').classList.remove('error-input');
             updateTotals();
