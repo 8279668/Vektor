@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Заказ аккумуляторов VEKTOR</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: #f4f7fc;
             margin: 0;
             padding: 15px;
-            padding-bottom: 90px; /* Отступ для липкой панели итогов */
+            padding-bottom: 110px;
             color: #2c3e50;
         }
         .container {
@@ -36,27 +34,19 @@
             margin-bottom: 20px;
             font-size: 0.95rem;
         }
-        
-        /* Поиск и фильтрация */
-        .search-box {
-            margin-bottom: 15px;
-            position: relative;
-        }
+        .search-box { margin-bottom: 15px; }
         .search-input {
             width: 100%;
             padding: 10px 16px;
             border: 1px solid #cbd5e1;
             border-radius: 8px;
             font-size: 14px;
-            transition: border-color 0.2s;
         }
         .search-input:focus {
             outline: none;
             border-color: #1a3b5d;
             box-shadow: 0 0 0 3px rgba(26, 59, 93, 0.1);
         }
-
-        /* Таблица */
         .table-wrap {
             overflow-x: auto;
             border: 1px solid #e2e8f0;
@@ -80,17 +70,13 @@
             text-align: center;
             border-bottom: 1px solid #e2e8f0;
         }
-        tr:hover {
-            background: #f8fafc;
-        }
+        tr:hover { background: #f8fafc; }
         .model {
             font-weight: 600;
             text-align: left;
             white-space: nowrap;
             color: #0f172a;
         }
-
-        /* Кнопки управления количеством +/- */
         .qty-control {
             display: inline-flex;
             align-items: center;
@@ -108,18 +94,12 @@
             font-weight: bold;
             color: #334155;
             cursor: pointer;
-            transition: background 0.15s;
             display: flex;
             align-items: center;
             justify-content: center;
             user-select: none;
         }
-        .qty-btn:hover {
-            background: #e2e8f0;
-        }
-        .qty-btn:active {
-            background: #cbd5e1;
-        }
+        .qty-btn:hover { background: #e2e8f0; }
         .qty-input {
             width: 42px;
             height: 28px;
@@ -141,8 +121,6 @@
             outline: none;
             background: #f0fdf4;
         }
-
-        /* Закрепленная (sticky) панель итогов */
         .sticky-totals {
             position: fixed;
             bottom: 0;
@@ -176,16 +154,8 @@
             align-items: center;
             gap: 6px;
         }
-        .total-item b {
-            color: #38bdf8;
-            font-size: 1.1rem;
-        }
-        .total-price-item b {
-            color: #4ade80;
-            font-size: 1.25rem;
-        }
-
-        /* Секция оформления заказа */
+        .total-item b { color: #38bdf8; font-size: 1.1rem; }
+        .total-price-item b { color: #4ade80; font-size: 1.25rem; }
         .order-section {
             margin-top: 30px;
             background: #f8fafc;
@@ -204,26 +174,18 @@
             gap: 12px;
             margin-bottom: 12px;
         }
-        .actions input,
-        .actions textarea {
+        .actions input, .actions textarea {
             padding: 10px 14px;
             border: 1px solid #cbd5e1;
             border-radius: 6px;
             font-size: 14px;
             flex: 1 1 200px;
-            transition: border-color 0.2s;
         }
-        .actions input:focus,
-        .actions textarea:focus {
+        .actions input:focus, .actions textarea:focus {
             outline: none;
             border-color: #1a3b5d;
         }
-        .actions textarea {
-            flex: 1 1 100%;
-            resize: vertical;
-        }
-
-        /* Кнопки */
+        .actions textarea { flex: 1 1 100%; resize: vertical; }
         .btn-group {
             display: flex;
             flex-wrap: wrap;
@@ -237,45 +199,24 @@
             font-weight: 600;
             font-size: 14px;
             cursor: pointer;
-            transition: all 0.2s;
             color: white;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
         }
-        .btn-submit {
-            background: #16a34a;
-        }
-        .btn-submit:hover {
-            background: #15803d;
-        }
-        .btn-round {
-            background: #0284c7;
-        }
-        .btn-round:hover {
-            background: #0369a1;
-        }
-        .btn-clear {
-            background: #64748b;
-        }
-        .btn-clear:hover {
-            background: #475569;
-        }
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        /* Валидация */
-        .required {
-            color: #ef4444;
-        }
+        .btn-submit { background: #16a34a; }
+        .btn-submit:hover { background: #15803d; }
+        .btn-round { background: #0284c7; }
+        .btn-round:hover { background: #0369a1; }
+        .btn-clear { background: #64748b; }
+        .btn-clear:hover { background: #475569; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .required { color: #ef4444; }
         .error-input {
             border-color: #ef4444 !important;
             background-color: #fef2f2 !important;
         }
-
         .footer-note {
             margin-top: 25px;
             font-size: 0.85em;
@@ -284,28 +225,12 @@
             border-top: 1px solid #e2e8f0;
             padding-top: 15px;
         }
-
-        /* Адаптивность для мобильных */
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
-                padding-bottom: 130px;
-            }
-            .container {
-                padding: 15px;
-            }
-            .totals-content {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 10px;
-            }
-            .totals-grid {
-                justify-content: space-between;
-                font-size: 0.85rem;
-            }
-            .qty-control {
-                scale: 0.9;
-            }
+            body { padding: 10px; padding-bottom: 150px; }
+            .container { padding: 15px; }
+            .totals-content { flex-direction: column; align-items: stretch; gap: 10px; }
+            .totals-grid { justify-content: space-between; font-size: 0.85rem; }
+            .qty-control { scale: 0.9; }
         }
     </style>
 </head>
@@ -315,7 +240,6 @@
         <h1 class="header-title">🔋 Каталог аккумуляторов VEKTOR</h1>
         <p class="subtitle">Выберите количество нужных позиций. Итоги по заказу рассчитываются автоматически. Цена указана с НДС 22%.</p>
 
-        <!-- Поиск моделей -->
         <div class="search-box">
             <input type="text" id="searchInput" class="search-input" placeholder="🔍 Быстрый поиск по названию модели..." oninput="filterCatalog()" />
         </div>
@@ -338,17 +262,15 @@
                     </tr>
                 </thead>
                 <tbody id="catalog-body">
-                    <!-- Данные будут вставлены из JavaScript -->
                 </tbody>
             </table>
         </div>
 
-        <!-- Форма для заказа -->
         <div class="order-section">
             <h3>📩 Оформление заказа</h3>
             <div class="actions">
-                <input type="text" id="clientCompany" placeholder="Название компании *" class="required-field" />
-                <input type="tel" id="clientPhone" placeholder="+7 (___) ___-__-__" class="phone-mask required-field" maxlength="18" />
+                <input type="text" id="clientCompany" placeholder="Название компании *" />
+                <input type="tel" id="clientPhone" placeholder="+7 (___) ___-__-__" maxlength="18" />
                 <input type="text" id="clientName" placeholder="Контактное лицо (необязательно)" />
             </div>
             <div class="actions">
@@ -370,7 +292,6 @@
         </div>
     </div>
 
-    <!-- Липкая панель итогов (Sticky Footer) -->
     <div class="sticky-totals">
         <div class="totals-content">
             <div class="totals-grid">
@@ -384,7 +305,7 @@
 
     <script>
         // ============================================================
-        // 1. ДАННЫЕ ИЗ ВАШЕЙ ТАБЛИЦЫ (ЦЕНЫ С НДС 22%)
+        // 1. ДАННЫЕ О ТОВАРАХ (полный каталог)
         // ============================================================
         const products = [
             { model: 'VEKTOR VT 1204', length: 0.113, width: 0.070, height: 0.086, pack: 10, weight: 1.30, price: 985 },
@@ -436,11 +357,11 @@
             { model: 'HDV1230', length: 0.167, width: 0.127, height: 0.175, pack: 2, weight: 8.63, price: 5820 }
         ];
 
+        // ============================================================
+        // 2. ОТРИСОВКА ТАБЛИЦЫ
+        // ============================================================
         const tbody = document.getElementById('catalog-body');
 
-        // ============================================================
-        // 2. ОТРИСОВКА ТАБЛИЦЫ C КНОПКАМИ +/-
-        // ============================================================
         function renderTable() {
             let html = '';
             products.forEach((p, index) => {
@@ -470,7 +391,9 @@
             updateTotals();
         }
 
-        // Изменение количества по кнопкам + и -
+        // ============================================================
+        // 3. УПРАВЛЕНИЕ КОЛИЧЕСТВОМ
+        // ============================================================
         function changeQty(index, delta) {
             const qtyInput = document.getElementById(`qty-${index}`);
             let val = parseInt(qtyInput.value) || 0;
@@ -480,27 +403,22 @@
             updateTotals();
         }
 
-        // Фильтрация каталога
+        // ============================================================
+        // 4. ПОИСК ПО МОДЕЛИ
+        // ============================================================
         function filterCatalog() {
             const filter = document.getElementById('searchInput').value.toLowerCase().trim();
             products.forEach((p, index) => {
                 const row = document.getElementById(`row-${index}`);
-                if (p.model.toLowerCase().includes(filter)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+                row.style.display = p.model.toLowerCase().includes(filter) ? '' : 'none';
             });
         }
 
         // ============================================================
-        // 3. РАСЧЁТ ИТОГОВ
+        // 5. ПЕРЕСЧЕТ ИТОГОВ
         // ============================================================
         function updateTotals() {
-            let totalWeight = 0,
-                totalVolume = 0,
-                totalPrice = 0,
-                totalPacks = 0;
+            let totalWeight = 0, totalVolume = 0, totalPrice = 0, totalPacks = 0;
 
             products.forEach((p, index) => {
                 const qtyInput = document.getElementById(`qty-${index}`);
@@ -529,7 +447,7 @@
         }
 
         // ============================================================
-        // 4. ОКРУГЛЕНИЕ ДО УПАКОВОК
+        // 6. ОКРУГЛЕНИЕ ДО УПАКОВОК
         // ============================================================
         function roundToPacks() {
             let changed = false;
@@ -553,7 +471,48 @@
         }
 
         // ============================================================
-        // 5. ВАЛИДАЦИЯ ФОРМЫ
+        // 7. МАСКА ТЕЛЕФОНА (улучшенная)
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneInput = document.getElementById('clientPhone');
+            
+            phoneInput.addEventListener('input', function() {
+                // Удаляем все нецифровые символы
+                let value = this.value.replace(/\D/g, '');
+                
+                // Если начинается с 8, заменяем на 7
+                if (value.startsWith('8')) value = '7' + value.slice(1);
+                // Если не начинается с 7, добавляем 7
+                if (!value.startsWith('7') && value.length > 0) value = '7' + value;
+                // Ограничиваем 11 цифрами
+                if (value.length > 11) value = value.slice(0, 11);
+                
+                // Форматируем
+                let formatted = '';
+                if (value.length > 0) formatted += '+7 ';
+                if (value.length > 1) formatted += '(' + value.slice(1, 4);
+                if (value.length >= 4) formatted += ') ' + value.slice(4, 7);
+                if (value.length >= 7) formatted += '-' + value.slice(7, 9);
+                if (value.length >= 9) formatted += '-' + value.slice(9, 11);
+                
+                this.value = formatted;
+            });
+            
+            // Исправление позиции курсора при редактировании
+            phoneInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace') {
+                    const pos = this.selectionStart;
+                    if (pos > 0 && this.value[pos - 1] === ' ') {
+                        this.value = this.value.slice(0, pos - 1) + this.value.slice(pos);
+                        this.selectionStart = pos - 1;
+                        this.selectionEnd = pos - 1;
+                    }
+                }
+            });
+        });
+
+        // ============================================================
+        // 8. ВАЛИДАЦИЯ ФОРМЫ
         // ============================================================
         function validateForm() {
             const company = document.getElementById('clientCompany').value.trim();
@@ -580,36 +539,7 @@
         }
 
         // ============================================================
-        // 6. УЛУЧШЕННАЯ МАСКА ВВОДА ТЕЛЕФОНА
-        // ============================================================
-        document.addEventListener('DOMContentLoaded', function() {
-            const phoneInput = document.getElementById('clientPhone');
-
-            phoneInput.addEventListener('input', function() {
-                let value = this.value.replace(/\D/g, '');
-                if (value.startsWith('8')) value = '7' + value.slice(1);
-                if (!value.startsWith('7') && value.length > 0) value = '7' + value;
-                if (value.length > 11) value = value.slice(0, 11);
-
-                let formatted = '+7 ';
-                if (value.length > 1) {
-                    formatted += '(' + value.slice(1, 4);
-                }
-                if (value.length >= 4) {
-                    formatted += ') ' + value.slice(4, 7);
-                }
-                if (value.length >= 7) {
-                    formatted += '-' + value.slice(7, 9);
-                }
-                if (value.length >= 9) {
-                    formatted += '-' + value.slice(9, 11);
-                }
-                this.value = formatted;
-            });
-        });
-
-        // ============================================================
-        // 7. ФОРМИРОВАНИЕ И ОТПРАВКА ЗАКАЗА
+        // 9. ОТПРАВКА ЗАКАЗА (с получением реального ответа)
         // ============================================================
         function sendOrder() {
             if (!validateForm()) return;
@@ -621,10 +551,7 @@
             const comment = document.getElementById('clientComment').value.trim() || '';
 
             let hasItems = false;
-            let totalWeight = 0,
-                totalVolume = 0,
-                totalPrice = 0,
-                totalPacks = 0;
+            let totalWeight = 0, totalVolume = 0, totalPrice = 0, totalPacks = 0;
             let orderDetails = '';
 
             products.forEach((p, index) => {
@@ -642,9 +569,7 @@
                     totalVolume += rowVolume;
                     totalPacks += packs;
 
-                    orderDetails +=
-                        `${p.model} | ${qty} шт. (${packs} упак.) | ${rowPrice.toLocaleString('ru-RU')} ₽ | вес: ${rowWeight.toFixed(2)} кг | объем: ${rowVolume.toFixed(4)} м³
-`;
+                    orderDetails += `${p.model} | ${qty} шт. (${packs} упак.) | ${rowPrice.toLocaleString('ru-RU')} ₽ | вес: ${rowWeight.toFixed(2)} кг | объем: ${rowVolume.toFixed(4)} м³\n`;
                 }
             });
 
@@ -653,76 +578,62 @@
                 return;
             }
 
-            let emailBody = '🔋 НОВЫЙ ЗАКАЗ АККУМУЛЯТОРОВ
-';
-            emailBody += '='.repeat(55) + '
-';
-            emailBody += `🏢 Компания: ${company}
-`;
-            emailBody += `👤 Контакт: ${name}
-`;
-            emailBody += `📞 Телефон: ${phone}
-`;
-            emailBody += `📧 Email: ${email}
-`;
-            if (comment) emailBody += `📝 Комментарий: ${comment}
-`;
-            emailBody += '
-📦 Состав заказа:
-';
-            emailBody += '-'.repeat(55) + '
-';
+            let emailBody = '🔋 НОВЫЙ ЗАКАЗ АККУМУЛЯТОРОВ\n';
+            emailBody += '='.repeat(55) + '\n';
+            emailBody += `🏢 Компания: ${company}\n`;
+            emailBody += `👤 Контакт: ${name}\n`;
+            emailBody += `📞 Телефон: ${phone}\n`;
+            emailBody += `📧 Email: ${email}\n`;
+            if (comment) emailBody += `📝 Комментарий: ${comment}\n`;
+            emailBody += '\n📦 Состав заказа:\n';
+            emailBody += '-'.repeat(55) + '\n';
             emailBody += orderDetails;
-            emailBody += '-'.repeat(55) + '
-';
-            emailBody += `💰 ИТОГО (с НДС 22%): ${totalPrice.toLocaleString('ru-RU')} ₽
-`;
-            emailBody += `⚖️ Общий вес: ${totalWeight.toFixed(2)} кг
-`;
-            emailBody += `📦 Общий объем: ${totalVolume.toFixed(4)} м³
-`;
-            emailBody += `📦 Количество упаковок: ${totalPacks}
-`;
-            emailBody += '='.repeat(55) + '
-';
+            emailBody += '-'.repeat(55) + '\n';
+            emailBody += `💰 ИТОГО (с НДС 22%): ${totalPrice.toLocaleString('ru-RU')} ₽\n`;
+            emailBody += `⚖️ Общий вес: ${totalWeight.toFixed(2)} кг\n`;
+            emailBody += `📦 Общий объем: ${totalVolume.toFixed(4)} м³\n`;
+            emailBody += `📦 Количество упаковок: ${totalPacks}\n`;
+            emailBody += '='.repeat(55) + '\n';
 
             const btn = document.querySelector('.btn-submit');
             btn.disabled = true;
             btn.textContent = '⏳ Отправка...';
 
-            const scriptURL =
-                'https://script.google.com/macros/s/AKfycbyNo08JZ2mKPvIDOcgAjQGqYzStwv0G5aWKiZTSB-20CZtlFAd_QkhwCxjyPGQX2Fz9/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyNo08JZ2mKPvIDOcgAjQGqYzStwv0G5aWKiZTSB-20CZtlFAd_QkhwCxjyPGQX2Fz9/exec';
 
             fetch(scriptURL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: new URLSearchParams({
-                        'company': company,
-                        'contact': name,
-                        'phone': phone,
-                        'email': email,
-                        'comment': comment,
-                        'order': emailBody
-                    })
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    'company': company,
+                    'contact': name,
+                    'phone': phone,
+                    'email': email,
+                    'comment': comment,
+                    'order': emailBody
                 })
-                .then(() => {
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result === 'success') {
                     alert('✅ Заказ успешно отправлен!');
                     clearAll();
-                })
-                .catch(() => {
-                    alert('❌ Ошибка при отправке. Попробуйте еще раз.');
-                })
-                .finally(() => {
-                    btn.disabled = false;
-                    btn.textContent = '📨 Оформить заказ';
-                });
+                } else {
+                    alert('❌ Ошибка при отправке: ' + (data.message || 'Неизвестная ошибка'));
+                }
+            })
+            .catch(error => {
+                alert('❌ Ошибка сети. Проверьте подключение к интернету и попробуйте еще раз.');
+                console.error('Ошибка:', error);
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.textContent = '📨 Оформить заказ';
+            });
         }
 
         // ============================================================
-        // 8. ОЧИСТКА
+        // 10. ОЧИСТКА ВСЕХ ПОЛЕЙ
         // ============================================================
         function clearAll() {
             products.forEach((_, index) => {
@@ -741,16 +652,16 @@
         }
 
         // ============================================================
-        // 9. ЗАПУСК
+        // 11. ЗАПУСК
         // ============================================================
         renderTable();
 
+        // Отключаем отправку по Enter в обычных полях
         document.addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
                 e.preventDefault();
             }
         });
     </script>
-
 </body>
 </html>
