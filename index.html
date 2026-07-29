@@ -512,27 +512,60 @@
         const response = await fetch(scriptURL);
         const data = await response.json();
         
-        // Проверяем новые данные (поле data, а не stocks)
+        // Проверяем, что данные есть
         if (data.result === 'success' && data.data && Object.keys(data.data).length > 0) {
             stocksData = data.data;
             stocksLoaded = true;
             
             // Сопоставляем данные с товарами
             products.forEach(p => {
+                let stock = 0;
+                let image = '';
+                
+                // Очищаем название модели для поиска (убираем "VEKTOR ")
+                let cleanModel = p.model.replace(/^VEKTOR\s+/, '').trim().toLowerCase();
+                
+                // Для HDV добавляем специальную обработку
+                if (p.model.startsWith('HDV')) {
+                    const digits = p.model.replace(/[^0-9]/g, '');
+                    cleanModel = 'hdv ' + digits;
+                }
+                
+                // Формируем ключи для поиска
+                const searchKeys = [
+                    cleanModel,                                     // "vt 1204" или "hdv 1204"
+                    cleanModel.replace(/\s/g, ''),                  // "vt1204" или "hdv1204"
+                    p.model.toLowerCase(),                          // "vektor vt 1204"
+                    p.model.replace(/\s/g, '').toLowerCase(),       // "vektorvt1204"
+                    p.model.split(' ').slice(-2).join(' ').toLowerCase() // "vt 1204"
+                ];
+                
+                // Добавляем поиск по цифрам для HDV
+                if (p.model.startsWith('HDV')) {
+                    const digits = p.model.replace(/[^0-9]/g, '');
+                    searchKeys.push(digits); // "1204"
+                    searchKeys.push('hdv' + digits); // "hdv1204"
+                }
+                
+                // Ищем в данных из файла
                 let found = false;
                 for (const [name, item] of Object.entries(stocksData)) {
-                    // Проверяем, содержит ли название из файла нашу модель
-                    if (name.includes(p.model) || p.model.includes(name)) {
-                        p.stock = item.stock || 0;
-                        p.image = item.image || '';
-                        found = true;
-                        break;
+                    // Приводим название из файла к нижнему регистру
+                    const nameLower = name.toLowerCase();
+                    
+                    for (const key of searchKeys) {
+                        if (key && nameLower.includes(key)) {
+                            stock = item.stock || 0;
+                            image = item.image || '';
+                            found = true;
+                            break;
+                        }
                     }
+                    if (found) break;
                 }
-                if (!found) {
-                    p.stock = 0;
-                    p.image = '';
-                }
+                
+                p.stock = stock;
+                p.image = image;
             });
         } else {
             stocksLoaded = false;
