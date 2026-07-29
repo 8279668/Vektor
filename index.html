@@ -507,8 +507,7 @@
 
         // Загрузка остатков из скрипта
         async function loadStocks() {
-            // Используйте ТОТ ЖЕ URL, что и для отправки заказов
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbyNo08JZ2mKPvIDOcgAjQGqYzStwv0G5aWKiZTSB-20CZtlFAd_QkhwCxjyPGQX2Fz9/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwZsaJ7pWbkNHi19ayGfgAhfnnPdkEgYsWo39xE_qJ3SxF6aegLxFY8kVb3x02Ikx9F/exec';
             
             try {
                 const response = await fetch(scriptURL);
@@ -524,9 +523,9 @@
                         
                         // Ищем по ключевым словам
                         const searchKeys = [
-                            p.model,                          // полное название
-                            p.model.replace(/\s/g, ''),       // без пробелов
-                            p.model.split(' ').slice(-2).join(' ') // последние два слова (например, "VT 1204")
+                            p.model,
+                            p.model.replace(/\s/g, ''),
+                            p.model.split(' ').slice(-2).join(' ')
                         ];
                         
                         for (const key of searchKeys) {
@@ -554,7 +553,6 @@
                 products.forEach(p => p.stock = 0);
             }
             
-            // Перерисовываем таблицу
             renderTable();
         }
 
@@ -585,7 +583,6 @@
         function renderTable() {
             const showStockColumn = stocksLoaded && Object.keys(stocksData).length > 0;
             
-            // Строим заголовок
             let headerHtml = `<tr>
                 <th>Модель</th>
                 <th class="col-specs">Код JIS</th>
@@ -609,7 +606,6 @@
             headerHtml += `</tr>`;
             thead.innerHTML = headerHtml;
 
-            // Строим строки
             let html = '';
             products.forEach((p, index) => {
                 let stockDisplay = '';
@@ -659,7 +655,6 @@
             });
             tbody.innerHTML = html;
 
-            // Применяем состояние видимости колонок
             document.querySelectorAll('.col-dimensions').forEach(el => {
                 el.style.display = dimVisible ? '' : 'none';
             });
@@ -934,7 +929,7 @@
             btn.disabled = true;
             btn.textContent = '⏳ Отправка...';
 
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbyNo08JZ2mKPvIDOcgAjQGqYzStwv0G5aWKiZTSB-20CZtlFAd_QkhwCxjyPGQX2Fz9/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwZsaJ7pWbkNHi19ayGfgAhfnnPdkEgYsWo39xE_qJ3SxF6aegLxFY8kVb3x02Ikx9F/exec';
 
             const payload = {
                 'company': company,
@@ -994,10 +989,7 @@
         // ============================================================
         // 14. ЗАПУСК
         // ============================================================
-        // Сначала отрисовываем таблицу без остатков
         renderTable();
-        
-        // Затем загружаем остатки (асинхронно)
         loadStocks();
 
         document.addEventListener('keypress', function(e) {
