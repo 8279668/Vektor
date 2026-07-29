@@ -366,9 +366,9 @@
 
         <div class="column-toggle-group">
             <span class="label">📋 Показать:</span>
-            <button class="toggle-btn active" id="toggleDimensions" onclick="toggleColumns('dimensions')">📐 Габариты</button>
-            <button class="toggle-btn active" id="toggleSpecs" onclick="toggleColumns('specs')">⚡ Характеристики</button>
-            <span style="font-size:0.8rem; color:#64748b; margin-left:auto;">(нажмите, чтобы скрыть/показать)</span>
+            <button class="toggle-btn" id="toggleDimensions" onclick="toggleColumns('dimensions')">📐 Габариты</button>
+            <button class="toggle-btn" id="toggleSpecs" onclick="toggleColumns('specs')">⚡ Характеристики</button>
+            <span style="font-size:0.8rem; color:#64748b; margin-left:auto;">(нажмите, чтобы показать/скрыть)</span>
         </div>
 
         <div class="table-wrap">
@@ -416,8 +416,7 @@
         <div class="totals-content">
             <div class="totals-grid">
                 <div class="total-item total-price-item">💰 Итого (с НДС): <b id="total-price">0</b> ₽</div>
-                <div class="total-item">⚖️ Вес: <b id="total-weight">0</b> кг</div>
-                <div class="total-item">📦 Объем: <b id="total-volume">0</b> м³</div>
+                <div class="total-item">📦 Вес/Объем: <b id="total-weight">0</b> кг / <b id="total-volume">0</b> м³</div>
                 <div class="total-item">📦 Упаковок: <b id="total-packs">0</b> шт.</div>
             </div>
         </div>
@@ -478,10 +477,10 @@
         ];
 
         // ============================================================
-        // 2. УПРАВЛЕНИЕ КОЛОНКАМИ
+        // 2. УПРАВЛЕНИЕ КОЛОНКАМИ (ПО УМОЛЧАНИЮ СКРЫТЫ)
         // ============================================================
-        let dimVisible = true;
-        let specsVisible = true;
+        let dimVisible = false;
+        let specsVisible = false;
 
         function toggleColumns(group) {
             if (group === 'dimensions') {
@@ -500,12 +499,11 @@
         }
 
         // ============================================================
-        // 3. ОСТАТКИ (ЗАГРУЗКА И ОТОБРАЖЕНИЕ)
+        // 3. ОСТАТКИ
         // ============================================================
         let stocksLoaded = false;
         let stocksData = {};
 
-        // Загрузка остатков из скрипта
         async function loadStocks() {
             const scriptURL = 'https://script.google.com/macros/s/AKfycbyBvWazVJhDxmkgImpkCuPDCsyxZBWwMc4jbdKu-ZfBavcHp-GOUqQkagQ53KW09BF40g/exec';
             
@@ -517,16 +515,20 @@
                     stocksData = data.stocks;
                     stocksLoaded = true;
                     
-                    // Сопоставляем остатки с товарами
                     products.forEach(p => {
                         let stock = undefined;
                         
-                        // Ищем по ключевым словам
                         const searchKeys = [
                             p.model,
                             p.model.replace(/\s/g, ''),
                             p.model.split(' ').slice(-2).join(' ')
                         ];
+                        
+                        if (p.model.startsWith('HDV')) {
+                            const digits = p.model.replace(/[^0-9]/g, '');
+                            searchKeys.push('HDV ' + digits);
+                            searchKeys.push('HDV' + digits);
+                        }
                         
                         for (const key of searchKeys) {
                             if (!key) continue;
@@ -556,7 +558,6 @@
             renderTable();
         }
 
-        // Принудительное обновление (по кнопке)
         async function refreshStocks() {
             const btn = document.querySelector('.btn-update');
             btn.disabled = true;
@@ -601,7 +602,7 @@
                 <th>Итого, ₽</th>`;
             
             if (showStockColumn) {
-                headerHtml += `<th>Наличие</th>`;
+                headerHtml += `<th>Наличие (склад Новосибирск)</th>`;
             }
             headerHtml += `</tr>`;
             thead.innerHTML = headerHtml;
@@ -655,12 +656,15 @@
             });
             tbody.innerHTML = html;
 
+            // Применяем состояние видимости колонок (по умолчанию скрыты)
             document.querySelectorAll('.col-dimensions').forEach(el => {
                 el.style.display = dimVisible ? '' : 'none';
             });
             document.querySelectorAll('.col-specs').forEach(el => {
                 el.style.display = specsVisible ? '' : 'none';
             });
+            
+            // Обновляем состояние кнопок
             document.getElementById('toggleDimensions').classList.toggle('active', dimVisible);
             document.getElementById('toggleSpecs').classList.toggle('active', specsVisible);
 
@@ -691,7 +695,7 @@
         }
 
         // ============================================================
-        // 7. ПЕРЕСЧЕТ ИТОГОВ
+        // 7. ПЕРЕСЧЕТ ИТОГОВ (объединенные вес и объем)
         // ============================================================
         function updateTotals() {
             let totalWeight = 0, totalVolume = 0, totalPrice = 0, totalPacks = 0;
