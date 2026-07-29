@@ -425,6 +425,7 @@
         // 1. ДАННЫЕ О ТОВАРАХ
         // ============================================================
         const products = [
+            // VEKTOR VT
             { model: 'VEKTOR VT 1204', jis: 'YTX4L-BS', capacity: 4, current: 50, polarity: 'ОБРАТНАЯ', length: 0.113, width: 0.070, height: 0.086, weight: 1.30, pack: 10, price: 985 },
             { model: 'VEKTOR VT 1205.1', jis: '12N5-3B', capacity: 5, current: 70, polarity: 'ОБРАТНАЯ', length: 0.119, width: 0.060, height: 0.129, weight: 1.77, pack: 10, price: 1260 },
             { model: 'VEKTOR VT 1205', jis: 'YTX5L-BS', capacity: 5, current: 80, polarity: 'ОБРАТНАЯ', length: 0.113, width: 0.070, height: 0.105, weight: 1.64, pack: 10, price: 1190 },
@@ -444,6 +445,7 @@
             { model: 'VEKTOR VT 12201', jis: 'YTX20HL-BS', capacity: 20, current: 270, polarity: 'ОБРАТНАЯ', length: 0.177, width: 0.088, height: 0.155, weight: 6.20, pack: 4, price: 3800 },
             { model: 'VEKTOR VT 1220', jis: 'YTX24HL-BS', capacity: 21, current: 350, polarity: 'ОБРАТНАЯ', length: 0.205, width: 0.091, height: 0.159, weight: 6.78, pack: 4, price: 4150 },
             { model: 'VEKTOR VT 1230', jis: 'YIX30L-BS', capacity: 30, current: 430, polarity: 'ОБРАТНАЯ', length: 0.166, width: 0.127, height: 0.175, weight: 9.10, pack: 2, price: 5250 },
+            // VEKTOR VTG
             { model: 'VEKTOR VTG 1214', jis: 'YTX14-BS', capacity: 14, current: 220, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.086, height: 0.145, weight: 4.59, pack: 6, price: 3750 },
             { model: 'VEKTOR VTG 1215', jis: 'YTX14L-BS', capacity: 14, current: 220, polarity: 'ОБРАТНАЯ', length: 0.150, width: 0.086, height: 0.145, weight: 4.59, pack: 6, price: 4010 },
             { model: 'VEKTOR VTG 1218.1', jis: 'YTX20CH-BS', capacity: 20, current: 250, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.086, height: 0.161, weight: 5.37, pack: 4, price: 4150 },
@@ -451,6 +453,7 @@
             { model: 'VEKTOR VTG 12201', jis: 'YTX20HL-BS', capacity: 20, current: 310, polarity: 'ОБРАТНАЯ', length: 0.175, width: 0.087, height: 0.154, weight: 6.20, pack: 4, price: 5250 },
             { model: 'VEKTOR VTG 1220', jis: 'YTX24HL-BS', capacity: 21, current: 370, polarity: 'ОБРАТНАЯ', length: 0.205, width: 0.087, height: 0.162, weight: 7.50, pack: 4, price: 5950 },
             { model: 'VEKTOR VTG 1230', jis: 'YIX30L-BS', capacity: 30, current: 410, polarity: 'ОБРАТНАЯ', length: 0.168, width: 0.127, height: 0.176, weight: 9.44, pack: 2, price: 7250 },
+            // HDV
             { model: 'HDV1204', jis: 'YTX4L-BS', capacity: 4, current: 50, polarity: 'ОБРАТНАЯ', length: 0.113, width: 0.070, height: 0.085, weight: 1.34, pack: 8, price: 1120 },
             { model: 'HDV1205.1', jis: '12N5-3B', capacity: 5, current: 70, polarity: 'ОБРАТНАЯ', length: 0.119, width: 0.060, height: 0.128, weight: 1.92, pack: 8, price: 1420 },
             { model: 'HDV1205', jis: 'YTX5L-BS', capacity: 5, current: 70, polarity: 'ОБРАТНАЯ', length: 0.113, width: 0.070, height: 0.105, weight: 1.86, pack: 8, price: 1450 },
@@ -503,6 +506,7 @@
         let stocksData = {};
 
         async function loadStocks() {
+            // Проверенный рабочий URL вашего скрипта
             const scriptURL = 'https://script.google.com/macros/s/AKfycbyBvWazVJhDxmkgImpkCuPDCsyxZBWwMc4jbdKu-ZfBavcHp-GOUqQkagQ53KW09BF40g/exec';
             
             try {
@@ -513,33 +517,32 @@
                     stocksData = data.stocks;
                     stocksLoaded = true;
                     
+                    // Сопоставляем остатки с товарами
                     products.forEach(p => {
                         let stock = undefined;
                         
-                        // Формируем ключи для поиска
+                        // Формируем ключи для поиска в порядке приоритета
                         const searchKeys = [
-                            p.model,
-                            p.model.replace(/\s/g, ''),
-                            p.model.split(' ').slice(-2).join(' ')
+                            p.model,                          // точное название
+                            p.model.replace(/\s/g, ''),       // без пробелов
+                            p.model.split(' ').slice(-2).join(' ') // последние два слова (например, "VT 1204")
                         ];
                         
                         // Специальные ключи для HDV
                         if (p.model.startsWith('HDV')) {
                             const digits = p.model.replace(/[^0-9]/g, '');
-                            // Ищем "HDV 1204", "HDV1204", "HDV 1204 " и просто "1204" с проверкой на HDV
                             searchKeys.push('HDV ' + digits);
                             searchKeys.push('HDV' + digits);
                             searchKeys.push('HDV ' + digits + ' ');
-                            // Ищем просто цифры, но только если в названии есть HDV
+                        }
+                        
+                        // Добавляем поиск по цифрам для всех моделей
+                        const digits = p.model.replace(/[^0-9]/g, '');
+                        if (digits) {
                             searchKeys.push(digits);
                         }
                         
-                        // Для VT и VTG тоже ищем по цифрам как запасной вариант
-                        if (p.model.includes('VT') || p.model.includes('VTG')) {
-                            const digits = p.model.replace(/[^0-9]/g, '');
-                            searchKeys.push(digits);
-                        }
-                        
+                        // Ищем в данных из Excel
                         for (const key of searchKeys) {
                             if (!key) continue;
                             for (const [name, qty] of Object.entries(stocksData)) {
@@ -705,7 +708,7 @@
         }
 
         // ============================================================
-        // 7. ПЕРЕСЧЕТ ИТОГОВ (без веса и объема в нижней панели)
+        // 7. ПЕРЕСЧЕТ ИТОГОВ
         // ============================================================
         function updateTotals() {
             let totalWeight = 0, totalVolume = 0, totalPrice = 0, totalPacks = 0;
