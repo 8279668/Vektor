@@ -506,49 +506,54 @@
         let stocksData = {};
 
         async function loadStocks() {
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbxU09cidHyeVB-y01-UmxgGZOkgQAZVFGCBY52kPAUvQOKIwWDoe9sBvpm3QApA8RVWMA/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyBvWazVJhDxmkgImpkCuPDCsyxZBWwMc4jbdKu-ZfBavcHp-GOUqQkagQ53KW09BF40g/exec';
+    
+    try {
+        const response = await fetch(scriptURL);
+        const data = await response.json();
+        
+        // Проверяем новые данные (поле data, а не stocks)
+        if (data.result === 'success' && data.data && Object.keys(data.data).length > 0) {
+            stocksData = data.data;
+            stocksLoaded = true;
             
-            try {
-                const response = await fetch(scriptURL);
-                const data = await response.json();
-                
-                if (data.result === 'success' && data.data && Object.keys(data.data).length > 0) {
-                    stocksData = data.data;
-                    stocksLoaded = true;
-                    
-                    products.forEach(p => {
-                        let stock = 0;
-                        for (const [name, item] of Object.entries(stocksData)) {
-                            if (name.includes(p.model) || p.model.includes(name)) {
-                                stock = item.stock || 0;
-                                if (item.image) {
-                                    p.image = item.image;
-                                }
-                                break;
-                            }
-                        }
-                        p.stock = stock;
-                    });
-                } else {
-                    stocksLoaded = false;
-                    stocksData = {};
-                    products.forEach(p => {
-                        p.stock = 0;
-                        p.image = '';
-                    });
+            // Сопоставляем данные с товарами
+            products.forEach(p => {
+                let found = false;
+                for (const [name, item] of Object.entries(stocksData)) {
+                    // Проверяем, содержит ли название из файла нашу модель
+                    if (name.includes(p.model) || p.model.includes(name)) {
+                        p.stock = item.stock || 0;
+                        p.image = item.image || '';
+                        found = true;
+                        break;
+                    }
                 }
-            } catch (error) {
-                console.warn('⚠️ Остатки не загружены:', error);
-                stocksLoaded = false;
-                stocksData = {};
-                products.forEach(p => {
+                if (!found) {
                     p.stock = 0;
                     p.image = '';
-                });
-            }
-            
-            renderTable();
+                }
+            });
+        } else {
+            stocksLoaded = false;
+            stocksData = {};
+            products.forEach(p => {
+                p.stock = 0;
+                p.image = '';
+            });
         }
+    } catch (error) {
+        console.warn('⚠️ Остатки не загружены:', error);
+        stocksLoaded = false;
+        stocksData = {};
+        products.forEach(p => {
+            p.stock = 0;
+            p.image = '';
+        });
+    }
+    
+    renderTable();
+}
 
         async function refreshStocks() {
             const btn = document.querySelector('.btn-update');
