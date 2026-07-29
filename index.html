@@ -34,6 +34,35 @@
             margin-bottom: 20px;
             font-size: 0.95rem;
         }
+        
+        /* Ссылки в шапке */
+        .header-links {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0 15px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9edf4;
+        }
+        .header-links a {
+            color: #1a3b5d;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+        .header-links a:hover {
+            background: #f0f5ff;
+            text-decoration: underline;
+        }
+        .header-links .divider {
+            color: #cbd5e1;
+            font-weight: 300;
+        }
+
         .search-box { margin-bottom: 15px; }
         .search-input {
             width: 100%;
@@ -48,7 +77,6 @@
             box-shadow: 0 0 0 3px rgba(26, 59, 93, 0.1);
         }
 
-        /* Кнопки управления колонками */
         .column-toggle-group {
             display: flex;
             flex-wrap: wrap;
@@ -281,6 +309,8 @@
         .btn-round:hover { background: #0369a1; }
         .btn-clear { background: #64748b; }
         .btn-clear:hover { background: #475569; }
+        .btn-update { background: #f59e0b; }
+        .btn-update:hover { background: #d97706; }
         .btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .required { color: #ef4444; }
         .error-input {
@@ -290,6 +320,10 @@
         .required-field {
             border-color: #ef4444 !important;
         }
+        .stock-high { color: #16a34a; font-weight: 600; }
+        .stock-medium { color: #f59e0b; font-weight: 600; }
+        .stock-low { color: #ef4444; font-weight: 600; }
+        .stock-zero { color: #ef4444; font-weight: 700; }
         .footer-note {
             margin-top: 25px;
             font-size: 0.85em;
@@ -314,14 +348,22 @@
 <body>
 
     <div class="container" id="app">
-        <h1 class="header-title">🔋 Каталог аккумуляторов VEKTOR</h1>
-        <p class="subtitle">Выберите количество нужных позиций. Итоги по заказу рассчитываются автоматически. Цена указана с НДС 22%.</p>
+        <div class="header">
+            <h1 class="header-title">🔋 Каталог аккумуляторов VEKTOR</h1>
+            
+            <div class="header-links">
+                <a href="https://vektor-moto.ru" target="_blank" rel="noopener noreferrer">🏍️ vektor-moto.ru</a>
+                <span class="divider">|</span>
+                <a href="https://vektor-energy.ru/catalog/" target="_blank" rel="noopener noreferrer">🏭 Промышленные АКБ</a>
+            </div>
+            
+            <p class="subtitle">Выберите количество нужных позиций. Итоги по заказу рассчитываются автоматически. Цена указана с НДС 22%.</p>
+        </div>
 
         <div class="search-box">
             <input type="text" id="searchInput" class="search-input" placeholder="🔍 Быстрый поиск по названию модели..." oninput="filterCatalog()" />
         </div>
 
-        <!-- Кнопки управления видимостью колонок -->
         <div class="column-toggle-group">
             <span class="label">📋 Показать:</span>
             <button class="toggle-btn active" id="toggleDimensions" onclick="toggleColumns('dimensions')">📐 Габариты</button>
@@ -331,24 +373,8 @@
 
         <div class="table-wrap">
             <table>
-                <thead>
-                    <tr>
-                        <th>Модель</th>
-                        <th class="col-specs">Код JIS</th>
-                        <th class="col-specs">Ёмкость, Ач</th>
-                        <th class="col-specs">Пусковой ток, А</th>
-                        <th class="col-specs">Полярность</th>
-                        <th class="col-dimensions">Длина, м</th>
-                        <th class="col-dimensions">Ширина, м</th>
-                        <th class="col-dimensions">Высота, м</th>
-                        <th class="col-dimensions">Вес, кг</th>
-                        <th>шт/упак</th>
-                        <th>Кол-во</th>
-                        <th>Общий вес, кг</th>
-                        <th>Объем, м³</th>
-                        <th>Цена за 1 шт, ₽</th>
-                        <th>Итого, ₽</th>
-                    </tr>
+                <thead id="table-header">
+                    <!-- Заголовок будет собран в JavaScript -->
                 </thead>
                 <tbody id="catalog-body"></tbody>
             </table>
@@ -373,6 +399,7 @@
             <div class="btn-group">
                 <button class="btn btn-submit" onclick="sendOrder()">📨 Оформить заказ</button>
                 <button class="btn btn-round" onclick="roundToPacks()">🔄 Округлить до упаковок</button>
+                <button class="btn btn-update" onclick="refreshStocks()">🔄 Обновить остатки</button>
                 <button class="btn btn-clear" onclick="clearAll()">🗑️ Очистить все</button>
             </div>
             <div style="margin-top: 12px; font-size: 0.85em; color: #64748b;">
@@ -398,7 +425,7 @@
 
     <script>
         // ============================================================
-        // 1. ДАННЫЕ О ТОВАРАХ (из вашего прайс-листа)
+        // 1. ДАННЫЕ О ТОВАРАХ
         // ============================================================
         const products = [
             { model: 'VEKTOR VT 1204', jis: 'YTX4L-BS', capacity: 4, current: 50, polarity: 'ОБРАТНАЯ', length: 0.113, width: 0.070, height: 0.086, weight: 1.30, pack: 10, price: 985 },
@@ -451,7 +478,7 @@
         ];
 
         // ============================================================
-        // 2. УПРАВЛЕНИЕ ВИДИМОСТЬЮ КОЛОНОК
+        // 2. УПРАВЛЕНИЕ КОЛОНКАМИ
         // ============================================================
         let dimVisible = true;
         let specsVisible = true;
@@ -473,13 +500,133 @@
         }
 
         // ============================================================
-        // 3. ОТРИСОВКА ТАБЛИЦЫ
+        // 3. ОСТАТКИ (ЗАГРУЗКА И ОТОБРАЖЕНИЕ)
         // ============================================================
+        let stocksLoaded = false;
+        let stocksData = {};
+
+        // Загрузка остатков из скрипта
+        async function loadStocks() {
+            // Используйте ТОТ ЖЕ URL, что и для отправки заказов
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyNo08JZ2mKPvIDOcgAjQGqYzStwv0G5aWKiZTSB-20CZtlFAd_QkhwCxjyPGQX2Fz9/exec';
+            
+            try {
+                const response = await fetch(scriptURL);
+                const data = await response.json();
+                
+                if (data.result === 'success' && data.stocks && Object.keys(data.stocks).length > 0) {
+                    stocksData = data.stocks;
+                    stocksLoaded = true;
+                    
+                    // Сопоставляем остатки с товарами
+                    products.forEach(p => {
+                        let stock = undefined;
+                        
+                        // Ищем по ключевым словам
+                        const searchKeys = [
+                            p.model,                          // полное название
+                            p.model.replace(/\s/g, ''),       // без пробелов
+                            p.model.split(' ').slice(-2).join(' ') // последние два слова (например, "VT 1204")
+                        ];
+                        
+                        for (const key of searchKeys) {
+                            if (!key) continue;
+                            for (const [name, qty] of Object.entries(stocksData)) {
+                                if (name.includes(key)) {
+                                    stock = (stock || 0) + qty;
+                                    break;
+                                }
+                            }
+                            if (stock !== undefined) break;
+                        }
+                        
+                        p.stock = stock !== undefined ? stock : 0;
+                    });
+                } else {
+                    stocksLoaded = false;
+                    stocksData = {};
+                    products.forEach(p => p.stock = 0);
+                }
+            } catch (error) {
+                console.warn('⚠️ Остатки не загружены:', error);
+                stocksLoaded = false;
+                stocksData = {};
+                products.forEach(p => p.stock = 0);
+            }
+            
+            // Перерисовываем таблицу
+            renderTable();
+        }
+
+        // Принудительное обновление (по кнопке)
+        async function refreshStocks() {
+            const btn = document.querySelector('.btn-update');
+            btn.disabled = true;
+            btn.textContent = '⏳ Загрузка...';
+            
+            await loadStocks();
+            
+            btn.disabled = false;
+            btn.textContent = '🔄 Обновить остатки';
+            
+            if (stocksLoaded) {
+                alert('✅ Остатки обновлены!');
+            } else {
+                alert('ℹ️ Файл с остатками не найден. Колонка скрыта.');
+            }
+        }
+
+        // ============================================================
+        // 4. ОТРИСОВКА ТАБЛИЦЫ
+        // ============================================================
+        const thead = document.getElementById('table-header');
         const tbody = document.getElementById('catalog-body');
 
         function renderTable() {
+            const showStockColumn = stocksLoaded && Object.keys(stocksData).length > 0;
+            
+            // Строим заголовок
+            let headerHtml = `<tr>
+                <th>Модель</th>
+                <th class="col-specs">Код JIS</th>
+                <th class="col-specs">Ёмкость, Ач</th>
+                <th class="col-specs">Пусковой ток, А</th>
+                <th class="col-specs">Полярность</th>
+                <th class="col-dimensions">Длина, м</th>
+                <th class="col-dimensions">Ширина, м</th>
+                <th class="col-dimensions">Высота, м</th>
+                <th class="col-dimensions">Вес, кг</th>
+                <th>шт/упак</th>
+                <th>Кол-во</th>
+                <th>Общий вес, кг</th>
+                <th>Объем, м³</th>
+                <th>Цена за 1 шт, ₽</th>
+                <th>Итого, ₽</th>`;
+            
+            if (showStockColumn) {
+                headerHtml += `<th>Наличие</th>`;
+            }
+            headerHtml += `</tr>`;
+            thead.innerHTML = headerHtml;
+
+            // Строим строки
             let html = '';
             products.forEach((p, index) => {
+                let stockDisplay = '';
+                let stockClass = '';
+                
+                if (showStockColumn) {
+                    if (p.stock > 0) {
+                        stockDisplay = `${p.stock} шт.`;
+                        if (p.stock < 5) stockClass = 'stock-low';
+                        else if (p.stock < 20) stockClass = 'stock-medium';
+                        else stockClass = 'stock-high';
+                    } else {
+                        stockDisplay = 'Нет в наличии';
+                        stockClass = 'stock-zero';
+                    }
+                }
+                
                 html += `
                     <tr id="row-${index}">
                         <td class="model">${p.model}</td>
@@ -502,12 +649,17 @@
                         <td id="row-weight-${index}">0</td>
                         <td id="row-volume-${index}">0</td>
                         <td>${p.price.toLocaleString('ru-RU')}</td>
-                        <td id="row-price-${index}">0</td>
-                    </tr>
-                `;
+                        <td id="row-price-${index}">0</td>`;
+                
+                if (showStockColumn) {
+                    html += `<td class="${stockClass}">${stockDisplay}</td>`;
+                }
+                
+                html += `</tr>`;
             });
             tbody.innerHTML = html;
 
+            // Применяем состояние видимости колонок
             document.querySelectorAll('.col-dimensions').forEach(el => {
                 el.style.display = dimVisible ? '' : 'none';
             });
@@ -521,7 +673,7 @@
         }
 
         // ============================================================
-        // 4. УПРАВЛЕНИЕ КОЛИЧЕСТВОМ
+        // 5. УПРАВЛЕНИЕ КОЛИЧЕСТВОМ
         // ============================================================
         function changeQty(index, delta) {
             const qtyInput = document.getElementById(`qty-${index}`);
@@ -533,7 +685,7 @@
         }
 
         // ============================================================
-        // 5. ПОИСК ПО МОДЕЛИ
+        // 6. ПОИСК ПО МОДЕЛИ
         // ============================================================
         function filterCatalog() {
             const filter = document.getElementById('searchInput').value.toLowerCase().trim();
@@ -544,14 +696,14 @@
         }
 
         // ============================================================
-        // 6. ПЕРЕСЧЕТ ИТОГОВ
+        // 7. ПЕРЕСЧЕТ ИТОГОВ
         // ============================================================
         function updateTotals() {
             let totalWeight = 0, totalVolume = 0, totalPrice = 0, totalPacks = 0;
 
             products.forEach((p, index) => {
                 const qtyInput = document.getElementById(`qty-${index}`);
-                const qty = parseInt(qtyInput.value) || 0; // Исправлено: parseInt
+                const qty = parseInt(qtyInput.value) || 0;
 
                 const rowPrice = p.price * qty;
                 const rowWeight = p.weight * qty;
@@ -576,13 +728,13 @@
         }
 
         // ============================================================
-        // 7. ОКРУГЛЕНИЕ ДО УПАКОВОК
+        // 8. ОКРУГЛЕНИЕ ДО УПАКОВОК
         // ============================================================
         function roundToPacks() {
             let changed = false;
             products.forEach((p, index) => {
                 const qtyInput = document.getElementById(`qty-${index}`);
-                let qty = parseInt(qtyInput.value) || 0; // Исправлено: parseInt
+                let qty = parseInt(qtyInput.value) || 0;
                 if (qty > 0) {
                     const rounded = Math.ceil(qty / p.pack) * p.pack;
                     if (rounded !== qty) {
@@ -600,7 +752,7 @@
         }
 
         // ============================================================
-        // 8. МАСКА ТЕЛЕФОНА
+        // 9. МАСКА ТЕЛЕФОНА
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             const phoneInput = document.getElementById('clientPhone');
@@ -633,7 +785,7 @@
         });
 
         // ============================================================
-        // 9. УПРАВЛЕНИЕ ОБЯЗАТЕЛЬНОСТЬЮ EMAIL
+        // 10. УПРАВЛЕНИЕ ОБЯЗАТЕЛЬНОСТЬЮ EMAIL
         // ============================================================
         function toggleEmailRequired() {
             const sendCopy = document.getElementById('sendCopy').checked;
@@ -652,7 +804,7 @@
         }
 
         // ============================================================
-        // 10. ВАЛИДАЦИЯ ФОРМЫ
+        // 11. ВАЛИДАЦИЯ ФОРМЫ
         // ============================================================
         function validateForm() {
             const company = document.getElementById('clientCompany').value.trim();
@@ -698,7 +850,7 @@
         }
 
         // ============================================================
-        // 11. ОТПРАВКА ЗАКАЗА (ИСПРАВЛЕННАЯ)
+        // 12. ОТПРАВКА ЗАКАЗА
         // ============================================================
         function sendOrder() {
             if (!validateForm()) return;
@@ -716,7 +868,7 @@
 
             products.forEach((p, index) => {
                 const qtyInput = document.getElementById(`qty-${index}`);
-                const qty = parseInt(qtyInput.value) || 0; // Исправлено: parseInt
+                const qty = parseInt(qtyInput.value) || 0;
                 if (qty > 0) {
                     hasItems = true;
                     const rowPrice = p.price * qty;
@@ -738,7 +890,6 @@
                 return;
             }
 
-            // Письмо для менеджера
             let managerBody = '🔋 НОВЫЙ ЗАКАЗ АККУМУЛЯТОРОВ\n';
             managerBody += '='.repeat(55) + '\n';
             managerBody += `🏢 Компания: ${company}\n`;
@@ -756,7 +907,6 @@
             managerBody += `📦 Количество упаковок: ${totalPacks}\n`;
             managerBody += '='.repeat(55) + '\n';
 
-            // Письмо для клиента
             const clientSubject = '✅ Ваш заказ аккумуляторов VEKTOR принят';
             let clientBody = 'Здравствуйте!\n\n';
             clientBody += 'Спасибо за ваш заказ в компании VEKTOR ENERGY. Мы получили вашу заявку и скоро свяжемся с вами для подтверждения деталей.\n\n';
@@ -784,8 +934,6 @@
             btn.disabled = true;
             btn.textContent = '⏳ Отправка...';
 
-            // ⚠️ ПРОВЕРЬТЕ ЭТУ ССЫЛКУ: 
-            // Убедитесь, что скрипт опубликован с доступом "Anyone" и "Execute as: Me"
             const scriptURL = 'https://script.google.com/macros/s/AKfycbyNo08JZ2mKPvIDOcgAjQGqYzStwv0G5aWKiZTSB-20CZtlFAd_QkhwCxjyPGQX2Fz9/exec';
 
             const payload = {
@@ -801,7 +949,6 @@
                 'client_body': clientBody
             };
 
-            // ИСПРАВЛЕННАЯ ОТПРАВКА: mode: 'no-cors'
             fetch(scriptURL, {
                 method: 'POST',
                 mode: 'no-cors',
@@ -809,7 +956,6 @@
                 body: new URLSearchParams(payload)
             })
             .then(() => {
-                // При no-cors ответ нельзя прочитать, но если fetch успешно выполнился — считаем отправку успешной
                 alert('✅ Заказ успешно отправлен!' + (sendCopy ? ' Копия направлена на ваш email.' : ''));
                 clearAll();
             })
@@ -824,7 +970,7 @@
         }
 
         // ============================================================
-        // 12. ОЧИСТКА
+        // 13. ОЧИСТКА
         // ============================================================
         function clearAll() {
             products.forEach((_, index) => {
@@ -846,9 +992,13 @@
         }
 
         // ============================================================
-        // 13. ЗАПУСК
+        // 14. ЗАПУСК
         // ============================================================
+        // Сначала отрисовываем таблицу без остатков
         renderTable();
+        
+        // Затем загружаем остатки (асинхронно)
+        loadStocks();
 
         document.addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
@@ -856,5 +1006,6 @@
             }
         });
     </script>
+
 </body>
 </html>
