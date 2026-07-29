@@ -35,7 +35,6 @@
             font-size: 0.95rem;
         }
         
-        /* Ссылки в шапке */
         .header-links {
             display: flex;
             flex-wrap: wrap;
@@ -416,7 +415,6 @@
         <div class="totals-content">
             <div class="totals-grid">
                 <div class="total-item total-price-item">💰 Итого (с НДС): <b id="total-price">0</b> ₽</div>
-                <div class="total-item">📦 Вес/Объем: <b id="total-weight">0</b> кг / <b id="total-volume">0</b> м³</div>
                 <div class="total-item">📦 Упаковок: <b id="total-packs">0</b> шт.</div>
             </div>
         </div>
@@ -518,16 +516,28 @@
                     products.forEach(p => {
                         let stock = undefined;
                         
+                        // Формируем ключи для поиска
                         const searchKeys = [
                             p.model,
                             p.model.replace(/\s/g, ''),
                             p.model.split(' ').slice(-2).join(' ')
                         ];
                         
+                        // Специальные ключи для HDV
                         if (p.model.startsWith('HDV')) {
                             const digits = p.model.replace(/[^0-9]/g, '');
+                            // Ищем "HDV 1204", "HDV1204", "HDV 1204 " и просто "1204" с проверкой на HDV
                             searchKeys.push('HDV ' + digits);
                             searchKeys.push('HDV' + digits);
+                            searchKeys.push('HDV ' + digits + ' ');
+                            // Ищем просто цифры, но только если в названии есть HDV
+                            searchKeys.push(digits);
+                        }
+                        
+                        // Для VT и VTG тоже ищем по цифрам как запасной вариант
+                        if (p.model.includes('VT') || p.model.includes('VTG')) {
+                            const digits = p.model.replace(/[^0-9]/g, '');
+                            searchKeys.push(digits);
                         }
                         
                         for (const key of searchKeys) {
@@ -695,7 +705,7 @@
         }
 
         // ============================================================
-        // 7. ПЕРЕСЧЕТ ИТОГОВ (объединенные вес и объем)
+        // 7. ПЕРЕСЧЕТ ИТОГОВ (без веса и объема в нижней панели)
         // ============================================================
         function updateTotals() {
             let totalWeight = 0, totalVolume = 0, totalPrice = 0, totalPacks = 0;
@@ -721,8 +731,6 @@
             });
 
             document.getElementById('total-price').textContent = totalPrice.toLocaleString('ru-RU');
-            document.getElementById('total-weight').textContent = totalWeight.toFixed(2);
-            document.getElementById('total-volume').textContent = totalVolume.toFixed(4);
             document.getElementById('total-packs').textContent = totalPacks;
         }
 
