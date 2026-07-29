@@ -508,7 +508,7 @@
         // Загрузка остатков из скрипта
         async function loadStocks() {
             // Используйте ТОТ ЖЕ URL, что и для отправки заказов
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbyNo08JZ2mKPvIDOcgAjQGqYzStwv0G5aWKiZTSB-20CZtlFAd_QkhwCxjyPGQX2Fz9/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwZsaJ7pWbkNHi19ayGfgAhfnnPdkEgYsWo39xE_qJ3SxF6aegLxFY8kVb3x02Ikx9F/exec';
             
             try {
                 const response = await fetch(scriptURL);
@@ -934,7 +934,7 @@
             btn.disabled = true;
             btn.textContent = '⏳ Отправка...';
 
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbyNo08JZ2mKPvIDOcgAjQGqYzStwv0G5aWKiZTSB-20CZtlFAd_QkhwCxjyPGQX2Fz9/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwZsaJ7pWbkNHi19ayGfgAhfnnPdkEgYsWo39xE_qJ3SxF6aegLxFY8kVb3x02Ikx9F/exec';
 
             const payload = {
                 'company': company,
