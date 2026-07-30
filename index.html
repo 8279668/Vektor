@@ -318,10 +318,6 @@
         .required-field {
             border-color: #ef4444 !important;
         }
-        .stock-high { color: #16a34a; font-weight: 600; }
-        .stock-medium { color: #f59e0b; font-weight: 600; }
-        .stock-low { color: #ef4444; font-weight: 600; }
-        .stock-zero { color: #ef4444; font-weight: 700; }
         .footer-note {
             margin-top: 25px;
             font-size: 0.85em;
@@ -369,9 +365,7 @@
 
         <div class="table-wrap">
             <table>
-                <thead id="table-header">
-                    <!-- Заголовок будет собран в JavaScript -->
-                </thead>
+                <thead id="table-header"></thead>
                 <tbody id="catalog-body"></tbody>
             </table>
         </div>
@@ -395,7 +389,7 @@
             <div class="btn-group">
                 <button class="btn btn-submit" onclick="sendOrder()">📨 Оформить заказ</button>
                 <button class="btn btn-round" onclick="roundToPacks()">🔄 Округлить до упаковок</button>
-                <button class="btn btn-update" onclick="refreshStocks()">🔄 Обновить остатки</button>
+                <button class="btn btn-update" onclick="refreshStocks()">🔄 Обновить данные</button>
                 <button class="btn btn-clear" onclick="clearAll()">🗑️ Очистить все</button>
             </div>
             <div style="margin-top: 12px; font-size: 0.85em; color: #64748b;">
@@ -425,14 +419,15 @@
         // ============================================================
         var products = {};
         var stocksLoaded = false;
+        var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwgq9pKQmt_dPJ0YLlKJGuF-tRo_GhYLa0oU2R0Z3n7_W5dRIoODcPlVHvVL8pmzQ51EA/exec';
 
         // ============================================================
-        // 2. ЗАГРУЗКА ДАННЫХ
+        // 2. ЗАГРУЗКА ДАННЫХ (АСИНХРОННАЯ)
         // ============================================================
-        function loadStocks() {
-            var scriptURL = 'https://script.google.com/macros/s/AKfycbw0hMJ7pbC9RMbUVzG-O-9upNgilKzJNBps3UH2r33VdHkMwavQd7zELUsc-eGHB2zA/exec';
+        function loadStocks(forceRefresh) {
+            var url = SCRIPT_URL + (forceRefresh ? '?refresh=true' : '');
             
-            fetch(scriptURL)
+            return fetch(url)
                 .then(function(response) { return response.json(); })
                 .then(function(data) {
                     if (data.result === 'success' && data.data && Object.keys(data.data).length > 0) {
@@ -457,16 +452,15 @@
             btn.disabled = true;
             btn.textContent = '⏳ Загрузка...';
             
-            loadStocks();
-            
-            btn.disabled = false;
-            btn.textContent = '🔄 Обновить остатки';
-            
-            if (stocksLoaded) {
-                alert('✅ Остатки обновлены!');
-            } else {
-                alert('ℹ️ Данные не загружены.');
-            }
+            loadStocks(true).then(function() {
+                btn.disabled = false;
+                btn.textContent = '🔄 Обновить данные';
+                if (stocksLoaded) {
+                    alert('✅ Данные успешно обновлены!');
+                } else {
+                    alert('⚠️ Не удалось обновить данные. Попробуйте еще раз.');
+                }
+            });
         }
 
         // ============================================================
@@ -503,13 +497,10 @@
             var productNames = Object.keys(products);
             
             if (productNames.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="20" style="text-align:center; padding:30px; color:#64748b;">📭 Данные временно недоступны. Попробуйте обновить страницу.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="20" style="text-align:center; padding:30px; color:#64748b;">📭 Данные временно недоступны. Нажмите "Обновить данные" или перезагрузите страницу.</td></tr>';
                 return;
             }
 
-            var showStockColumn = true;
-            
-            // Заголовок
             var headerHtml = '<tr>' +
                 '<th>Фото</th>' +
                 '<th>Модель</th>' +
@@ -526,37 +517,18 @@
                 '<th>Общий вес, кг</th>' +
                 '<th>Объем, м³</th>' +
                 '<th>МРЦ, ₽</th>' +
-                '<th>Итого, ₽</th>';
-            
-            if (showStockColumn) {
-                headerHtml += '<th>Наличие (склад Новосибирск)</th>';
-            }
-            headerHtml += '</tr>';
+                '<th>Итого, ₽</th>' +
+            '</tr>';
             thead.innerHTML = headerHtml;
 
-            // Строки
             var html = '';
-            for (var name in products) {
+            for (var i = 0; i < productNames.length; i++) {
+                var name = productNames[i];
                 var item = products[name];
-                var stock = item.stock || 0;
-                
-                var stockDisplay = '';
-                var stockClass = '';
-                if (stock > 0) {
-                    stockDisplay = stock + ' шт.';
-                    if (stock < 5) stockClass = 'stock-low';
-                    else if (stock < 20) stockClass = 'stock-medium';
-                    else stockClass = 'stock-high';
-                } else {
-                    stockDisplay = 'Нет в наличии';
-                    stockClass = 'stock-zero';
-                }
-                
                 var priceDisplay = item.price > 0 ? item.price.toLocaleString('ru-RU') : '—';
                 var imageHtml = item.image ? '<img src="' + item.image + '" alt="' + name + '" style="max-width: 50px; height: auto; border-radius: 4px;" />' : '';
-                var index = productNames.indexOf(name);
                 
-                html += '<tr id="row-' + index + '">' +
+                html += '<tr id="row-' + i + '">' +
                     '<td>' + imageHtml + '</td>' +
                     '<td class="model">' + name + '</td>' +
                     '<td class="col-specs">' + (item.jis || '—') + '</td>' +
@@ -570,35 +542,24 @@
                     '<td>' + (item.pack || '—') + '</td>' +
                     '<td>' +
                         '<div class="qty-control">' +
-                            '<button type="button" class="qty-btn" onclick="changeQty(' + index + ', -1)">−</button>' +
-                            '<input type="number" class="qty-input" id="qty-' + index + '" min="0" value="0" step="1" oninput="updateTotals()" />' +
-                            '<button type="button" class="qty-btn" onclick="changeQty(' + index + ', 1)">+</button>' +
+                            '<button type="button" class="qty-btn" onclick="changeQty(' + i + ', -1)">−</button>' +
+                            '<input type="number" class="qty-input" id="qty-' + i + '" min="0" value="0" step="1" oninput="updateTotals()" />' +
+                            '<button type="button" class="qty-btn" onclick="changeQty(' + i + ', 1)">+</button>' +
                         '</div>' +
                     '</td>' +
-                    '<td id="row-weight-' + index + '">0</td>' +
-                    '<td id="row-volume-' + index + '">0</td>' +
+                    '<td id="row-weight-' + i + '">0</td>' +
+                    '<td id="row-volume-' + i + '">0</td>' +
                     '<td>' + priceDisplay + '</td>' +
-                    '<td id="row-price-' + index + '">0</td>';
-                
-                if (showStockColumn) {
-                    html += '<td class="' + stockClass + '">' + stockDisplay + '</td>';
-                }
-                
-                html += '</tr>';
+                    '<td id="row-price-' + i + '">0</td>' +
+                '</tr>';
             }
             tbody.innerHTML = html;
 
-            // Применяем состояние колонок
-            var dimEls = document.querySelectorAll('.col-dimensions');
-            for (var i = 0; i < dimEls.length; i++) {
-                dimEls[i].style.display = dimVisible ? '' : 'none';
-            }
-            var specEls = document.querySelectorAll('.col-specs');
-            for (var i = 0; i < specEls.length; i++) {
-                specEls[i].style.display = specsVisible ? '' : 'none';
-            }
-            document.getElementById('toggleDimensions').classList.toggle('active', dimVisible);
-            document.getElementById('toggleSpecs').classList.toggle('active', specsVisible);
+            toggleColumns('dimensions');
+            toggleColumns('specs');
+            // повторный вызов для правильного применения состояния
+            dimVisible = !dimVisible; toggleColumns('dimensions');
+            specsVisible = !specsVisible; toggleColumns('specs');
 
             updateTotals();
         }
@@ -680,7 +641,8 @@
                 var name = productNames[i];
                 var item = products[name];
                 var qtyInput = document.getElementById('qty-' + i);
-                if (!qtyInput) return;
+                if (!qtyInput) continue;
+                
                 var qty = parseInt(qtyInput.value) || 0;
                 if (qty > 0 && item.pack) {
                     var rounded = Math.ceil(qty / item.pack) * item.pack;
@@ -709,21 +671,12 @@
                 if (value.length > 11) value = value.slice(0, 11);
 
                 var formatted = '';
-                if (value.length > 0) {
-                    formatted = '+7';
-                }
-                if (value.length > 1) {
-                    formatted += ' (' + value.slice(1, 4);
-                }
-                if (value.length >= 4) {
-                    formatted += ') ' + value.slice(4, 7);
-                }
-                if (value.length >= 7) {
-                    formatted += '-' + value.slice(7, 9);
-                }
-                if (value.length >= 9) {
-                    formatted += '-' + value.slice(9, 11);
-                }
+                if (value.length > 0) formatted = '+7';
+                if (value.length > 1) formatted += ' (' + value.slice(1, 4);
+                if (value.length >= 4) formatted += ') ' + value.slice(4, 7);
+                if (value.length >= 7) formatted += '-' + value.slice(7, 9);
+                if (value.length >= 9) formatted += '-' + value.slice(9, 11);
+                
                 this.value = formatted;
             });
         });
@@ -833,8 +786,6 @@
             btn.disabled = true;
             btn.textContent = '⏳ Отправка...';
 
-            var scriptURL = 'https://script.google.com/macros/s/AKfycbw0hMJ7pbC9RMbUVzG-O-9upNgilKzJNBps3UH2r33VdHkMwavQd7zELUsc-eGHB2zA/exec';
-
             var body = 'Компания: ' + company + '\nКонтакт: ' + name + '\nТелефон: ' + phone + '\nEmail: ' + email + '\nКомментарий: ' + comment + '\n\nЗаказ:\n' + orderDetails + '\n\nИтого: ' + totalPrice.toLocaleString('ru-RU') + ' ₽';
 
             var payload = new URLSearchParams();
@@ -847,7 +798,7 @@
             payload.append('client_copy', sendCopy ? 'yes' : 'no');
             payload.append('client_email', email);
 
-            fetch(scriptURL, {
+            fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -903,6 +854,5 @@
             }
         });
     </script>
-
 </body>
 </html>
