@@ -415,444 +415,369 @@
 
     <script>
         // ============================================================
-        // 1. ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+        // 1. ДАННЫЕ О ТОВАРАХ (ВСЕ МОДЕЛИ ИЗ ПРАЙС-ЛИСТА)
         // ============================================================
-        var products = {};
-        var stocksLoaded = false;
-        var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBEDA9d3iMRp9EALVH84x2XxBlm3wCWqR7Eo-mkihwWlzs-NAz8JyJHEmR2bb-ykqXcw/exec';
-
-        // ============================================================
-        // 2. ЗАГРУЗКА ДАННЫХ (АСИНХРОННАЯ)
-        // ============================================================
-        function loadStocks(forceRefresh) {
-            var url = SCRIPT_URL + (forceRefresh ? '?refresh=true' : '');
-            
-            return fetch(url)
-                .then(function(response) { return response.json(); })
-                .then(function(data) {
-                    if (data.result === 'success' && data.data && Object.keys(data.data).length > 0) {
-                        products = data.data;
-                        stocksLoaded = true;
-                    } else {
-                        stocksLoaded = false;
-                        products = {};
-                    }
-                    renderTable();
-                })
-                .catch(function(error) {
-                    console.warn('⚠️ Ошибка загрузки:', error);
-                    stocksLoaded = false;
-                    products = {};
-                    renderTable();
-                });
-        }
-
-        function refreshStocks() {
-            var btn = document.querySelector('.btn-update');
-            btn.disabled = true;
-            btn.textContent = '⏳ Загрузка...';
-            
-            loadStocks(true).then(function() {
-                btn.disabled = false;
-                btn.textContent = '🔄 Обновить данные';
-                if (stocksLoaded) {
-                    alert('✅ Данные успешно обновлены!');
-                } else {
-                    alert('⚠️ Не удалось обновить данные. Попробуйте еще раз.');
-                }
-            });
-        }
-
-        // ============================================================
-        // 3. УПРАВЛЕНИЕ КОЛОНКАМИ
-        // ============================================================
-        var dimVisible = false;
-        var specsVisible = false;
-
-        function toggleColumns(group) {
-            if (group === 'dimensions') {
-                dimVisible = !dimVisible;
-                document.getElementById('toggleDimensions').classList.toggle('active', dimVisible);
-                var els = document.querySelectorAll('.col-dimensions');
-                for (var i = 0; i < els.length; i++) {
-                    els[i].style.display = dimVisible ? '' : 'none';
-                }
-            } else if (group === 'specs') {
-                specsVisible = !specsVisible;
-                document.getElementById('toggleSpecs').classList.toggle('active', specsVisible);
-                var els = document.querySelectorAll('.col-specs');
-                for (var i = 0; i < els.length; i++) {
-                    els[i].style.display = specsVisible ? '' : 'none';
-                }
-            }
-        }
-
-        // ============================================================
-        // 4. ОТРИСОВКА ТАБЛИЦЫ
-        // ============================================================
-        var thead = document.getElementById('table-header');
-        var tbody = document.getElementById('catalog-body');
-
-        function renderTable() {
-            var productNames = Object.keys(products);
-            
-            if (productNames.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="20" style="text-align:center; padding:30px; color:#64748b;">📭 Данные временно недоступны. Нажмите "Обновить данные" или перезагрузите страницу.</td></tr>';
-                return;
-            }
-
-            var headerHtml = '<tr>' +
-                '<th>Фото</th>' +
-                '<th>Модель</th>' +
-                '<th class="col-specs">Код JIS</th>' +
-                '<th class="col-specs">Ёмкость, Ач</th>' +
-                '<th class="col-specs">Пусковой ток, А</th>' +
-                '<th class="col-specs">Полярность</th>' +
-                '<th class="col-dimensions">Длина, м</th>' +
-                '<th class="col-dimensions">Ширина, м</th>' +
-                '<th class="col-dimensions">Высота, м</th>' +
-                '<th class="col-dimensions">Вес, кг</th>' +
-                '<th>шт/упак</th>' +
-                '<th>Кол-во</th>' +
-                '<th>Общий вес, кг</th>' +
-                '<th>Объем, м³</th>' +
-                '<th>МРЦ, ₽</th>' +
-                '<th>Итого, ₽</th>' +
-            '</tr>';
-            thead.innerHTML = headerHtml;
-
-            var html = '';
-            for (var i = 0; i < productNames.length; i++) {
-                var name = productNames[i];
-                var item = products[name];
-                var priceDisplay = item.price > 0 ? item.price.toLocaleString('ru-RU') : '—';
-                var imageHtml = item.image ? '<img src="' + item.image + '" alt="' + name + '" style="max-width: 50px; height: auto; border-radius: 4px;" />' : '';
-                
-                html += '<tr id="row-' + i + '">' +
-                    '<td>' + imageHtml + '</td>' +
-                    '<td class="model">' + name + '</td>' +
-                    '<td class="col-specs">' + (item.jis || '—') + '</td>' +
-                    '<td class="col-specs">' + (item.capacity || '—') + '</td>' +
-                    '<td class="col-specs">' + (item.current || '—') + '</td>' +
-                    '<td class="col-specs">' + (item.polarity || '—') + '</td>' +
-                    '<td class="col-dimensions">' + (item.length ? item.length.toFixed(3) : '—') + '</td>' +
-                    '<td class="col-dimensions">' + (item.width ? item.width.toFixed(3) : '—') + '</td>' +
-                    '<td class="col-dimensions">' + (item.height ? item.height.toFixed(3) : '—') + '</td>' +
-                    '<td class="col-dimensions">' + (item.weight ? item.weight.toFixed(2) : '—') + '</td>' +
-                    '<td>' + (item.pack || '—') + '</td>' +
-                    '<td>' +
-                        '<div class="qty-control">' +
-                            '<button type="button" class="qty-btn" onclick="changeQty(' + i + ', -1)">−</button>' +
-                            '<input type="number" class="qty-input" id="qty-' + i + '" min="0" value="0" step="1" oninput="updateTotals()" />' +
-                            '<button type="button" class="qty-btn" onclick="changeQty(' + i + ', 1)">+</button>' +
-                        '</div>' +
-                    '</td>' +
-                    '<td id="row-weight-' + i + '">0</td>' +
-                    '<td id="row-volume-' + i + '">0</td>' +
-                    '<td>' + priceDisplay + '</td>' +
-                    '<td id="row-price-' + i + '">0</td>' +
-                '</tr>';
-            }
-            tbody.innerHTML = html;
-
-            toggleColumns('dimensions');
-            toggleColumns('specs');
-            // повторный вызов для правильного применения состояния
-            dimVisible = !dimVisible; toggleColumns('dimensions');
-            specsVisible = !specsVisible; toggleColumns('specs');
-
-            updateTotals();
-        }
-
-        // ============================================================
-        // 5. УПРАВЛЕНИЕ КОЛИЧЕСТВОМ
-        // ============================================================
-        function changeQty(index, delta) {
-            var qtyInput = document.getElementById('qty-' + index);
-            if (!qtyInput) return;
-            var val = parseInt(qtyInput.value) || 0;
-            val += delta;
-            if (val < 0) val = 0;
-            qtyInput.value = val;
-            updateTotals();
-        }
-
-        // ============================================================
-        // 6. ПОИСК ПО МОДЕЛИ
-        // ============================================================
-        function filterCatalog() {
-            var filter = document.getElementById('searchInput').value.toLowerCase().trim();
-            var productNames = Object.keys(products);
-            for (var i = 0; i < productNames.length; i++) {
-                var row = document.getElementById('row-' + i);
-                if (row) {
-                    var match = productNames[i].toLowerCase().indexOf(filter) !== -1;
-                    row.style.display = match ? '' : 'none';
-                }
-            }
-        }
-
-        // ============================================================
-        // 7. ПЕРЕСЧЕТ ИТОГОВ
-        // ============================================================
-        function updateTotals() {
-            var totalWeight = 0, totalVolume = 0, totalPrice = 0, totalPacks = 0;
-            var productNames = Object.keys(products);
-
-            for (var i = 0; i < productNames.length; i++) {
-                var name = productNames[i];
-                var item = products[name];
-                var qtyInput = document.getElementById('qty-' + i);
-                var qty = parseInt(qtyInput ? qtyInput.value : 0) || 0;
-
-                var rowPrice = item.price * qty;
-                var rowWeight = item.weight * qty;
-                var rowVolume = item.length * item.width * item.height * qty;
-
-                var priceCell = document.getElementById('row-price-' + i);
-                var weightCell = document.getElementById('row-weight-' + i);
-                var volumeCell = document.getElementById('row-volume-' + i);
-
-                if (priceCell) priceCell.textContent = rowPrice.toLocaleString('ru-RU');
-                if (weightCell) weightCell.textContent = rowWeight.toFixed(2);
-                if (volumeCell) volumeCell.textContent = rowVolume.toFixed(4);
-
-                if (qty > 0) {
-                    totalPrice += rowPrice;
-                    totalWeight += rowWeight;
-                    totalVolume += rowVolume;
-                    totalPacks += Math.ceil(qty / (item.pack || 1));
-                }
-            }
-
-            document.getElementById('total-price').textContent = totalPrice.toLocaleString('ru-RU');
-            document.getElementById('total-weight').textContent = totalWeight.toFixed(2);
-            document.getElementById('total-volume').textContent = totalVolume.toFixed(4);
-            document.getElementById('total-packs').textContent = totalPacks;
-        }
-
-        // ============================================================
-        // 8. ОКРУГЛЕНИЕ ДО УПАКОВОК
-        // ============================================================
-        function roundToPacks() {
-            var changed = false;
-            var productNames = Object.keys(products);
-            for (var i = 0; i < productNames.length; i++) {
-                var name = productNames[i];
-                var item = products[name];
-                var qtyInput = document.getElementById('qty-' + i);
-                if (!qtyInput) continue;
-                
-                var qty = parseInt(qtyInput.value) || 0;
-                if (qty > 0 && item.pack) {
-                    var rounded = Math.ceil(qty / item.pack) * item.pack;
-                    if (rounded !== qty) {
-                        qtyInput.value = rounded;
-                        changed = true;
-                    }
-                }
-            }
-            if (changed) {
-                updateTotals();
-                alert('✅ Количество округлено до полных упаковок.');
-            } else {
-                alert('ℹ️ Все позиции уже кратны упаковкам или корзина пуста.');
-            }
-        }
-
-        // ============================================================
-        // 9. МАСКА ТЕЛЕФОНА
-        // ============================================================
-        document.addEventListener('DOMContentLoaded', function() {
-            var phoneInput = document.getElementById('clientPhone');
-            
-            phoneInput.addEventListener('input', function() {
-                var value = this.value.replace(/\D/g, '');
-                if (value.length > 11) value = value.slice(0, 11);
-
-                var formatted = '';
-                if (value.length > 0) formatted = '+7';
-                if (value.length > 1) formatted += ' (' + value.slice(1, 4);
-                if (value.length >= 4) formatted += ') ' + value.slice(4, 7);
-                if (value.length >= 7) formatted += '-' + value.slice(7, 9);
-                if (value.length >= 9) formatted += '-' + value.slice(9, 11);
-                
-                this.value = formatted;
-            });
-        });
-
-        // ============================================================
-        // 10. УПРАВЛЕНИЕ ОБЯЗАТЕЛЬНОСТЬЮ EMAIL
-        // ============================================================
-        function toggleEmailRequired() {
-            var sendCopy = document.getElementById('sendCopy').checked;
-            var emailField = document.getElementById('clientEmail');
-            var hint = document.getElementById('emailRequiredHint');
-            
-            if (sendCopy) {
-                emailField.classList.add('required-field');
-                hint.classList.add('visible');
-                emailField.placeholder = 'Email для копии *';
-            } else {
-                emailField.classList.remove('required-field');
-                hint.classList.remove('visible');
-                emailField.placeholder = 'Email (для счета и копии)';
-            }
-        }
-
-        // ============================================================
-        // 11. ВАЛИДАЦИЯ ФОРМЫ
-        // ============================================================
-        function validateForm() {
-            var company = document.getElementById('clientCompany').value.trim();
-            var phoneRaw = document.getElementById('clientPhone').value.trim();
-            var email = document.getElementById('clientEmail').value.trim();
-            var sendCopy = document.getElementById('sendCopy').checked;
-
-            if (!company) {
-                alert('⚠️ Пожалуйста, укажите название компании.');
-                document.getElementById('clientCompany').classList.add('error-input');
-                document.getElementById('clientCompany').focus();
-                return false;
-            }
-            document.getElementById('clientCompany').classList.remove('error-input');
-
-            var phoneDigits = phoneRaw.replace(/\D/g, '');
-            if (phoneDigits.length !== 11) {
-                alert('⚠️ Введите номер телефона в формате +7 (XXX) XXX-XX-XX (11 цифр).');
-                document.getElementById('clientPhone').classList.add('error-input');
-                document.getElementById('clientPhone').focus();
-                return false;
-            }
-            document.getElementById('clientPhone').classList.remove('error-input');
-
-            if (sendCopy) {
-                if (email === '') {
-                    alert('⚠️ Укажите email, чтобы получить копию заказа.');
-                    document.getElementById('clientEmail').classList.add('error-input');
-                    document.getElementById('clientEmail').focus();
-                    return false;
-                }
-                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(email)) {
-                    alert('⚠️ Введите корректный email (например, client@domain.ru).');
-                    document.getElementById('clientEmail').classList.add('error-input');
-                    document.getElementById('clientEmail').focus();
-                    return false;
-                }
-            }
-            document.getElementById('clientEmail').classList.remove('error-input');
-
-            return true;
-        }
-
-        // ============================================================
-        // 12. ОТПРАВКА ЗАКАЗА
-        // ============================================================
-        function sendOrder() {
-            if (!validateForm()) return;
-
-            var company = document.getElementById('clientCompany').value.trim();
-            var phone = document.getElementById('clientPhone').value.trim();
-            var name = document.getElementById('clientName').value.trim() || 'Не указано';
-            var email = document.getElementById('clientEmail').value.trim() || '';
-            var comment = document.getElementById('clientComment').value.trim() || '';
-            var sendCopy = document.getElementById('sendCopy').checked;
-
-            var hasItems = false;
-            var orderDetails = '';
-            var totalPrice = 0;
-            var productNames = Object.keys(products);
-
-            for (var i = 0; i < productNames.length; i++) {
-                var name2 = productNames[i];
-                var item = products[name2];
-                var qtyInput = document.getElementById('qty-' + i);
-                var qty = parseInt(qtyInput ? qtyInput.value : 0) || 0;
-                if (qty > 0) {
-                    hasItems = true;
-                    var rowPrice = item.price * qty;
-                    totalPrice += rowPrice;
-                    orderDetails += name2 + ' | ' + qty + ' шт. | ' + rowPrice.toLocaleString('ru-RU') + ' ₽\n';
-                }
-            }
-
-            if (!hasItems) {
-                alert('⚠️ Корзина пуста! Выберите хотя бы один товар.');
-                return;
-            }
-
-            var btn = document.querySelector('.btn-submit');
-            btn.disabled = true;
-            btn.textContent = '⏳ Отправка...';
-
-            var body = 'Компания: ' + company + '\nКонтакт: ' + name + '\nТелефон: ' + phone + '\nEmail: ' + email + '\nКомментарий: ' + comment + '\n\nЗаказ:\n' + orderDetails + '\n\nИтого: ' + totalPrice.toLocaleString('ru-RU') + ' ₽';
-
-            var payload = new URLSearchParams();
-            payload.append('company', company);
-            payload.append('contact', name);
-            payload.append('phone', phone);
-            payload.append('email', email);
-            payload.append('comment', comment);
-            payload.append('order', body);
-            payload.append('client_copy', sendCopy ? 'yes' : 'no');
-            payload.append('client_email', email);
-
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: payload
-            })
-            .then(function() {
-                alert('✅ Заказ успешно отправлен!' + (sendCopy ? ' Копия направлена на ваш email.' : ''));
-                clearAll();
-            })
-            .catch(function(error) {
-                alert('❌ Ошибка отправки. Попробуйте еще раз.');
-                console.error('Ошибка:', error);
-            })
-            .finally(function() {
-                btn.disabled = false;
-                btn.textContent = '📨 Оформить заказ';
-            });
-        }
-
-        // ============================================================
-        // 13. ОЧИСТКА
-        // ============================================================
-        function clearAll() {
-            var productNames = Object.keys(products);
-            for (var i = 0; i < productNames.length; i++) {
-                var qtyInput = document.getElementById('qty-' + i);
-                if (qtyInput) qtyInput.value = 0;
-            }
-            document.getElementById('clientCompany').value = '';
-            document.getElementById('clientPhone').value = '';
-            document.getElementById('clientName').value = '';
-            document.getElementById('clientEmail').value = '';
-            document.getElementById('clientComment').value = '';
-            document.getElementById('sendCopy').checked = false;
-            document.getElementById('searchInput').value = '';
-            filterCatalog();
-            document.getElementById('clientCompany').classList.remove('error-input');
-            document.getElementById('clientPhone').classList.remove('error-input');
-            document.getElementById('clientEmail').classList.remove('error-input');
-            toggleEmailRequired();
-            updateTotals();
-        }
-
-        // ============================================================
-        // 14. ЗАПУСК
-        // ============================================================
-        renderTable();
-        loadStocks();
-
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
-                e.preventDefault();
-            }
-        });
-    </script>
-</body>
-</html>
+        var products = {
+            // ===== VT (AGM) =====
+            "VEKTOR PLUS VT 1204": {
+                name: "VEKTOR PLUS VT 1204",
+                jis: "YTX4L-BS",
+                capacity: 4,
+                current: 50,
+                polarity: "ОБРАТНАЯ",
+                length: 0.113,
+                width: 0.070,
+                height: 0.086,
+                weight: 1.30,
+                pack: 10,
+                price: 1600,
+                image: "https://optim.tildacdn.com/stor6263-6435-4634-b336-373963643133/-/format/webp/25342f73602a52ac7e2aebf909055e49.webp"
+            },
+            "VEKTOR PLUS VT 1205.1": {
+                name: "VEKTOR PLUS VT 1205.1",
+                jis: "12N5-3B",
+                capacity: 5,
+                current: 70,
+                polarity: "ОБРАТНАЯ",
+                length: 0.119,
+                width: 0.060,
+                height: 0.129,
+                weight: 1.77,
+                pack: 10,
+                price: 1950,
+                image: "https://optim.tildacdn.com/stor3233-3938-4435-b335-346532653034/-/format/webp/070198e27000bcfc59874f5a4e46a57f.png.webp"
+            },
+            "VEKTOR PLUS VT 1205": {
+                name: "VEKTOR PLUS VT 1205",
+                jis: "YTX5L-BS",
+                capacity: 5,
+                current: 80,
+                polarity: "ОБРАТНАЯ",
+                length: 0.113,
+                width: 0.070,
+                height: 0.105,
+                weight: 1.64,
+                pack: 10,
+                price: 1850,
+                image: "https://optim.tildacdn.com/stor3339-6332-4636-b066-343834356363/-/format/webp/aee456086698373dd7b942ffd5f5da4e.png.webp"
+            },
+            "VEKTOR PLUS VT 1207": {
+                name: "VEKTOR PLUS VT 1207",
+                jis: "YTX7A-BS",
+                capacity: 7,
+                current: 100,
+                polarity: "ПРЯМАЯ",
+                length: 0.150,
+                width: 0.086,
+                height: 0.094,
+                weight: 2.40,
+                pack: 8,
+                price: 2250,
+                image: "https://optim.tildacdn.com/stor3239-3665-4235-b065-633661353265/-/format/webp/720cd5b568eacefcdf86ca28826cea01.png.webp"
+            },
+            "VEKTOR PLUS VT 1207.1": {
+                name: "VEKTOR PLUS VT 1207.1",
+                jis: "YTX7L-BS",
+                capacity: 7,
+                current: 100,
+                polarity: "ОБРАТНАЯ",
+                length: 0.113,
+                width: 0.070,
+                height: 0.130,
+                weight: 2.15,
+                pack: 8,
+                price: 2350,
+                image: "https://optim.tildacdn.com/stor6639-6665-4431-b332-363466376162/-/contain/452x452/center/center/-/format/webp/a05b3dad66ccdc6b33f7fc5b410f9ad4.png.webp"
+            },
+            "VEKTOR PLUS VT 1207.2": {
+                name: "VEKTOR PLUS VT 1207.2",
+                jis: "YTZ7S",
+                capacity: 7,
+                current: 130,
+                polarity: "ОБРАТНАЯ",
+                length: 0.113,
+                width: 0.070,
+                height: 0.107,
+                weight: 2.02,
+                pack: 10,
+                price: 2550,
+                image: "https://optim.tildacdn.com/stor6564-3963-4634-a531-306535353763/-/contain/452x452/center/center/-/format/webp/ce2592463dd8a0c09b0c986dcbfe8f95.png.webp"
+            },
+            "VEKTOR PLUS VT 1208": {
+                name: "VEKTOR PLUS VT 1208",
+                jis: "YT7B-BS",
+                capacity: 8,
+                current: 110,
+                polarity: "ПРЯМАЯ",
+                length: 0.150,
+                width: 0.066,
+                height: 0.095,
+                weight: 2.25,
+                pack: 10,
+                price: 2400,
+                image: ""
+            },
+            "VEKTOR PLUS VT 1209": {
+                name: "VEKTOR PLUS VT 1209",
+                jis: "YTX9-BS",
+                capacity: 9,
+                current: 135,
+                polarity: "ПРЯМАЯ",
+                length: 0.150,
+                width: 0.086,
+                height: 0.107,
+                weight: 2.93,
+                pack: 8,
+                price: 2800,
+                image: "https://optim.tildacdn.com/stor6665-3738-4030-b531-633162626131/-/contain/452x452/center/center/-/format/webp/e0cd690dbd844c2615e61858f268d596.png.webp"
+            },
+            "VEKTOR PLUS VT 1209.1": {
+                name: "VEKTOR PLUS VT 1209.1",
+                jis: "YT9B-BS",
+                capacity: 9,
+                current: 115,
+                polarity: "ПРЯМАЯ",
+                length: 0.151,
+                width: 0.071,
+                height: 0.107,
+                weight: 2.65,
+                pack: 8,
+                price: 2990,
+                image: ""
+            },
+            "VEKTOR PLUS VT 1210": {
+                name: "VEKTOR PLUS VT 1210",
+                jis: "12N9-4B-1",
+                capacity: 10,
+                current: 120,
+                polarity: "ПРЯМАЯ",
+                length: 0.137,
+                width: 0.076,
+                height: 0.134,
+                weight: 2.70,
+                pack: 8,
+                price: 2850,
+                image: "https://optim.tildacdn.com/stor3436-3433-4361-b736-633437393532/-/contain/452x452/center/center/-/format/webp/5d039cac4d55d288e0876ec1b3bb6ccd.png.webp"
+            },
+            "VEKTOR PLUS VT 1210.1": {
+                name: "VEKTOR PLUS VT 1210.1",
+                jis: "YTZ10S",
+                capacity: 10,
+                current: 190,
+                polarity: "ПРЯМАЯ",
+                length: 0.150,
+                width: 0.086,
+                height: 0.094,
+                weight: 2.85,
+                pack: 8,
+                price: 3250,
+                image: "https://optim.tildacdn.com/stor3233-6534-4133-a531-383062636137/-/contain/452x452/center/center/-/format/webp/dde37b00296a74e4725b5776687f9382.png.webp"
+            },
+            "VEKTOR PLUS VT 1211": {
+                name: "VEKTOR PLUS VT 1211",
+                jis: "YTZ12S",
+                capacity: 11,
+                current: 210,
+                polarity: "ПРЯМАЯ",
+                length: 0.151,
+                width: 0.086,
+                height: 0.112,
+                weight: 3.36,
+                pack: 8,
+                price: 3900,
+                image: ""
+            },
+            "VEKTOR PLUS VT 1212": {
+                name: "VEKTOR PLUS VT 1212",
+                jis: "YTX12-BS",
+                capacity: 12,
+                current: 180,
+                polarity: "ПРЯМАЯ",
+                length: 0.150,
+                width: 0.086,
+                height: 0.130,
+                weight: 3.87,
+                pack: 6,
+                price: 3450,
+                image: "https://optim.tildacdn.com/stor3963-6663-4536-b066-323062326461/-/contain/452x452/center/center/-/format/webp/6278d12c00658ddfa96b2da2d9304aec.png.webp"
+            },
+            "VEKTOR PLUS VT 1214": {
+                name: "VEKTOR PLUS VT 1214",
+                jis: "YTX14-BS",
+                capacity: 14,
+                current: 200,
+                polarity: "ПРЯМАЯ",
+                length: 0.150,
+                width: 0.086,
+                height: 0.140,
+                weight: 4.78,
+                pack: 6,
+                price: 4550,
+                image: "https://optim.tildacdn.com/stor6134-3963-4564-b534-353465393665/-/contain/452x452/center/center/-/format/webp/25683d5b468ae2712679d3b20b1c8830.png.webp"
+            },
+            "VEKTOR PLUS VT 1216": {
+                name: "VEKTOR PLUS VT 1216",
+                jis: "YB16AL-A2",
+                capacity: 16,
+                current: 210,
+                polarity: "ОБРАТНАЯ",
+                length: 0.205,
+                width: 0.070,
+                height: 0.162,
+                weight: 5.42,
+                pack: 4,
+                price: 5850,
+                image: "https://optim.tildacdn.com/stor3630-6437-4731-b134-666538323165/-/contain/452x452/center/center/-/format/webp/731d2c364369e8a0c35f661210e926ac.png.webp"
+            },
+            "VEKTOR PLUS VT 1218": {
+                name: "VEKTOR PLUS VT 1218",
+                jis: "YTX20-BS",
+                capacity: 20,
+                current: 270,
+                polarity: "ПРЯМАЯ",
+                length: 0.177,
+                width: 0.088,
+                height: 0.155,
+                weight: 6.20,
+                pack: 4,
+                price: 6100,
+                image: "https://optim.tildacdn.com/stor6136-6234-4232-b233-376434353133/-/contain/452x452/center/center/-/format/webp/804312058c26f8af068ec82c83c1aeb9.png.webp"
+            },
+            "VEKTOR PLUS VT 12201": {
+                name: "VEKTOR PLUS VT 12201",
+                jis: "YTX20HL-BS",
+                capacity: 20,
+                current: 270,
+                polarity: "ОБРАТНАЯ",
+                length: 0.177,
+                width: 0.088,
+                height: 0.155,
+                weight: 6.20,
+                pack: 4,
+                price: 6100,
+                image: "https://optim.tildacdn.com/stor3638-3839-4639-b637-323830663532/-/contain/452x452/center/center/-/format/webp/ad40f1a76eb6c4cea5549ad62f7f21c8.png.webp"
+            },
+            "VEKTOR PLUS VT 1220": {
+                name: "VEKTOR PLUS VT 1220",
+                jis: "YTX24HL-BS",
+                capacity: 21,
+                current: 350,
+                polarity: "ОБРАТНАЯ",
+                length: 0.205,
+                width: 0.091,
+                height: 0.159,
+                weight: 6.78,
+                pack: 4,
+                price: 6700,
+                image: "https://optim.tildacdn.com/stor6439-3832-4563-b631-346161653334/-/contain/452x452/center/center/-/format/webp/843c4de9d533228984e8e7f4b2539ca7.png.webp"
+            },
+            "VEKTOR PLUS VT 1230": {
+                name: "VEKTOR PLUS VT 1230",
+                jis: "YIX30L-BS",
+                capacity: 30,
+                current: 430,
+                polarity: "ОБРАТНАЯ",
+                length: 0.166,
+                width: 0.127,
+                height: 0.175,
+                weight: 9.10,
+                pack: 2,
+                price: 8250,
+                image: "https://optim.tildacdn.com/stor6333-3566-4831-a438-376539326337/-/contain/452x452/center/center/-/format/webp/c641265110b91f351d7058d5c53ad950.png.webp"
+            },
+            // ===== VTG (GEL) =====
+            "VEKTOR PLUS VTG 1214": {
+                name: "VEKTOR PLUS VTG 1214",
+                jis: "YTX14-BS",
+                capacity: 14,
+                current: 220,
+                polarity: "ПРЯМАЯ",
+                length: 0.150,
+                width: 0.086,
+                height: 0.145,
+                weight: 4.59,
+                pack: 6,
+                price: 6700,
+                image: "https://optim.tildacdn.com/stor6564-3766-4363-b064-353365383862/-/contain/452x452/center/center/-/format/webp/34c855c085e9e75bfddafa7168770419.png.webp"
+            },
+            "VEKTOR PLUS VTG 1215": {
+                name: "VEKTOR PLUS VTG 1215",
+                jis: "YTX14L-BS",
+                capacity: 14,
+                current: 220,
+                polarity: "ОБРАТНАЯ",
+                length: 0.150,
+                width: 0.086,
+                height: 0.145,
+                weight: 4.59,
+                pack: 6,
+                price: 6900,
+                image: "https://optim.tildacdn.com/stor6665-3631-4135-b866-626531633562/-/contain/452x452/center/center/-/format/webp/5d156d3aa7074ccdf62ef40164bbb72f.png.webp"
+            },
+            "VEKTOR PLUS VTG 1218.1": {
+                name: "VEKTOR PLUS VTG 1218.1",
+                jis: "YTX20CH-BS",
+                capacity: 20,
+                current: 250,
+                polarity: "ПРЯМАЯ",
+                length: 0.150,
+                width: 0.086,
+                height: 0.161,
+                weight: 5.37,
+                pack: 4,
+                price: 7000,
+                image: "https://optim.tildacdn.com/stor6365-3538-4332-b939-616436396161/-/contain/452x452/center/center/-/format/webp/5c24d1ac9666a2201a826751da951e57.png.webp"
+            },
+            "VEKTOR PLUS VTG 1218": {
+                name: "VEKTOR PLUS VTG 1218",
+                jis: "YTX20H-BS",
+                capacity: 20,
+                current: 290,
+                polarity: "ПРЯМАЯ",
+                length: 0.175,
+                width: 0.087,
+                height: 0.154,
+                weight: 6.20,
+                pack: 4,
+                price: 7100,
+                image: "https://optim.tildacdn.com/stor6365-3538-4332-b939-616436396161/-/contain/452x452/center/center/-/format/webp/5c24d1ac9666a2201a826751da951e57.png.webp"
+            },
+            "VEKTOR PLUS VTG 12201": {
+                name: "VEKTOR PLUS VTG 12201",
+                jis: "YTX20HL-BS",
+                capacity: 20,
+                current: 310,
+                polarity: "ОБРАТНАЯ",
+                length: 0.175,
+                width: 0.087,
+                height: 0.154,
+                weight: 6.20,
+                pack: 4,
+                price: 7900,
+                image: "https://optim.tildacdn.com/stor3533-6536-4235-b366-373666346335/-/contain/452x452/center/center/-/format/webp/e3b12c958c4951af5994284d69492164.png.webp"
+            },
+            "VEKTOR PLUS VTG 1220": {
+                name: "VEKTOR PLUS VTG 1220",
+                jis: "YTX24HL-BS",
+                capacity: 21,
+                current: 370,
+                polarity: "ОБРАТНАЯ",
+                length: 0.205,
+                width: 0.087,
+                height: 0.162,
+                weight: 7.50,
+                pack: 4,
+                price: 9300,
+                image: "https://optim.tildacdn.com/stor6539-6138-4637-b965-656332316436/-/contain/452x452/center/center/-/format/webp/538892005ec9b2262caeee5b709c4f19.png.webp"
+            },
+            "VEKTOR PLUS VTG 1230": {
+                name: "VEKTOR PLUS VTG 1230",
+                jis: "YIX30L-BS",
+                capacity: 30,
+                current: 410,
+                polarity: "ОБРАТНАЯ",
+                length: 0.168,
+                width: 0.127,
+                height: 0.176,
+                weight: 9.44,
+               
