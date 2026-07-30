@@ -422,138 +422,32 @@
 
     <script>
         // ============================================================
-        // 1. ДАННЫЕ О ТОВАРАХ (ВСЕ МОДЕЛИ ИЗ ПРАЙС-ЛИСТА)
-        // ============================================================
-        const products = [
-    // ===== VT (AGM) =====
-    { model: 'VEKTOR PLUS VT 1204', jis: 'YTX4L-BS', capacity: 4, current: 50, polarity: 'ОБРАТНАЯ', length: 0.113, width: 0.070, height: 0.086, weight: 1.30, pack: 10, price: 985 },
-    { model: 'VEKTOR PLUS VT 1205.1', jis: '12N5-3B', capacity: 5, current: 70, polarity: 'ОБРАТНАЯ', length: 0.119, width: 0.060, height: 0.129, weight: 1.77, pack: 10, price: 1260 },
-    { model: 'VEKTOR PLUS VT 1205', jis: 'YTX5L-BS', capacity: 5, current: 80, polarity: 'ОБРАТНАЯ', length: 0.113, width: 0.070, height: 0.105, weight: 1.64, pack: 10, price: 1190 },
-    { model: 'VEKTOR PLUS VT 1207', jis: 'YTX7A-BS', capacity: 7, current: 100, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.086, height: 0.094, weight: 2.40, pack: 8, price: 1430 },
-    { model: 'VEKTOR PLUS VT 1207.1', jis: 'YTX7L-BS', capacity: 7, current: 100, polarity: 'ОБРАТНАЯ', length: 0.113, width: 0.070, height: 0.130, weight: 2.15, pack: 8, price: 1530 },
-    { model: 'VEKTOR PLUS VT 1207.2', jis: 'YTZ7S', capacity: 7, current: 130, polarity: 'ОБРАТНАЯ', length: 0.113, width: 0.070, height: 0.107, weight: 2.02, pack: 10, price: 1635 },
-    { model: 'VEKTOR PLUS VT 1208', jis: 'YT7B-BS', capacity: 8, current: 110, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.066, height: 0.095, weight: 2.25, pack: 10, price: 1710 },
-    { model: 'VEKTOR PLUS VT 1209', jis: 'YTX9-BS', capacity: 9, current: 135, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.086, height: 0.107, weight: 2.93, pack: 8, price: 1825 },
-    { model: 'VEKTOR PLUS VT 1209.1', jis: 'YT9B-BS', capacity: 9, current: 115, polarity: 'ПРЯМАЯ', length: 0.151, width: 0.071, height: 0.107, weight: 2.65, pack: 8, price: 2050 },
-    { model: 'VEKTOR PLUS VT 1210', jis: '12N9-4B-1', capacity: 10, current: 120, polarity: 'ПРЯМАЯ', length: 0.137, width: 0.076, height: 0.134, weight: 2.70, pack: 8, price: 1820 },
-    { model: 'VEKTOR PLUS VT 1210.1', jis: 'YTZ10S', capacity: 10, current: 190, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.086, height: 0.094, weight: 2.85, pack: 8, price: 2150 },
-    { model: 'VEKTOR PLUS VT 1211', jis: 'YTZ12S', capacity: 11, current: 210, polarity: 'ПРЯМАЯ', length: 0.151, width: 0.086, height: 0.112, weight: 3.36, pack: 8, price: 2690 },
-    { model: 'VEKTOR PLUS VT 1212', jis: 'YTX12-BS', capacity: 12, current: 180, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.086, height: 0.130, weight: 3.87, pack: 6, price: 2145 },
-    { model: 'VEKTOR PLUS VT 1214', jis: 'YTX14-BS', capacity: 14, current: 200, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.086, height: 0.140, weight: 4.78, pack: 6, price: 2820 },
-    { model: 'VEKTOR PLUS VT 1216', jis: 'YB16AL-A2', capacity: 16, current: 210, polarity: 'ОБРАТНАЯ', length: 0.205, width: 0.070, height: 0.162, weight: 5.42, pack: 4, price: 3690 },
-    { model: 'VEKTOR PLUS VT 1218', jis: 'YTX20-BS', capacity: 20, current: 270, polarity: 'ПРЯМАЯ', length: 0.177, width: 0.088, height: 0.155, weight: 6.20, pack: 4, price: 3800 },
-    { model: 'VEKTOR PLUS VT 12201', jis: 'YTX20HL-BS', capacity: 20, current: 270, polarity: 'ОБРАТНАЯ', length: 0.177, width: 0.088, height: 0.155, weight: 6.20, pack: 4, price: 3800 },
-    { model: 'VEKTOR PLUS VT 1220', jis: 'YTX24HL-BS', capacity: 21, current: 350, polarity: 'ОБРАТНАЯ', length: 0.205, width: 0.091, height: 0.159, weight: 6.78, pack: 4, price: 4150 },
-    { model: 'VEKTOR PLUS VT 1230', jis: 'YIX30L-BS', capacity: 30, current: 430, polarity: 'ОБРАТНАЯ', length: 0.166, width: 0.127, height: 0.175, weight: 9.10, pack: 2, price: 5250 },
-    
-    // ===== VTG (GEL) =====
-    { model: 'VEKTOR PLUS VTG 1214', jis: 'YTX14-BS', capacity: 14, current: 220, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.086, height: 0.145, weight: 4.59, pack: 6, price: 3750 },
-    { model: 'VEKTOR PLUS VTG 1215', jis: 'YTX14L-BS', capacity: 14, current: 220, polarity: 'ОБРАТНАЯ', length: 0.150, width: 0.086, height: 0.145, weight: 4.59, pack: 6, price: 4010 },
-    { model: 'VEKTOR PLUS VTG 1218.1', jis: 'YTX20CH-BS', capacity: 20, current: 250, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.086, height: 0.161, weight: 5.37, pack: 4, price: 4150 },
-    { model: 'VEKTOR PLUS VTG 1218', jis: 'YTX20H-BS', capacity: 20, current: 290, polarity: 'ПРЯМАЯ', length: 0.175, width: 0.087, height: 0.154, weight: 6.20, pack: 4, price: 4490 },
-    { model: 'VEKTOR PLUS VTG 12201', jis: 'YTX20HL-BS', capacity: 20, current: 310, polarity: 'ОБРАТНАЯ', length: 0.175, width: 0.087, height: 0.154, weight: 6.20, pack: 4, price: 5250 },
-    { model: 'VEKTOR PLUS VTG 1220', jis: 'YTX24HL-BS', capacity: 21, current: 370, polarity: 'ОБРАТНАЯ', length: 0.205, width: 0.087, height: 0.162, weight: 7.50, pack: 4, price: 5950 },
-    { model: 'VEKTOR PLUS VTG 1230', jis: 'YIX30L-BS', capacity: 30, current: 410, polarity: 'ОБРАТНАЯ', length: 0.168, width: 0.127, height: 0.176, weight: 9.44, pack: 2, price: 7250 },
-    
-    // ===== HDV =====
-    { model: 'VEKTOR PLUS HDV 1204', jis: 'YTX4L-BS', capacity: 4, current: 50, polarity: 'ОБРАТНАЯ', length: 0.113, width: 0.070, height: 0.085, weight: 1.34, pack: 8, price: 1120 },
-    { model: 'VEKTOR PLUS HDV 1205.1', jis: '12N5-3B', capacity: 5, current: 70, polarity: 'ОБРАТНАЯ', length: 0.119, width: 0.060, height: 0.128, weight: 1.92, pack: 8, price: 1420 },
-    { model: 'VEKTOR PLUS HDV 1205', jis: 'YTX5L-BS', capacity: 5, current: 70, polarity: 'ОБРАТНАЯ', length: 0.113, width: 0.070, height: 0.105, weight: 1.86, pack: 8, price: 1450 },
-    { model: 'VEKTOR PLUS HDV 1207.2', jis: 'YTZ7S', capacity: 7, current: 90, polarity: 'ОБРАТНАЯ', length: 0.113, width: 0.070, height: 0.105, weight: 1.93, pack: 8, price: 1650 },
-    { model: 'VEKTOR PLUS HDV 1206.5', jis: 'YTX6.5L-BS', capacity: 6.5, current: 70, polarity: 'ОБРАТНАЯ', length: 0.138, width: 0.066, height: 0.100, weight: 1.96, pack: 8, price: 1570 },
-    { model: 'VEKTOR PLUS HDV 1207', jis: 'YTX7A-BS', capacity: 7, current: 100, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.087, height: 0.093, weight: 2.40, pack: 6, price: 1830 },
-    { model: 'VEKTOR PLUS HDV 1210.1', jis: 'YTZ10S', capacity: 10, current: 170, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.087, height: 0.093, weight: 3.20, pack: 6, price: 2650 },
-    { model: 'VEKTOR PLUS HDV 1208', jis: 'YT7B-BS', capacity: 7, current: 100, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.065, height: 0.093, weight: 2.16, pack: 6, price: 1850 },
-    { model: 'VEKTOR PLUS HDV 1207.1', jis: 'YTX7L-BS', capacity: 7, current: 100, polarity: 'ОБРАТНАЯ', length: 0.113, width: 0.070, height: 0.130, weight: 2.39, pack: 8, price: 1850 },
-    { model: 'VEKTOR PLUS HDV 1209', jis: 'YTX9-BS', capacity: 9, current: 120, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.087, height: 0.105, weight: 2.85, pack: 6, price: 2100 },
-    { model: 'VEKTOR PLUS HDV 1211', jis: 'YTZ14S', capacity: 14, current: 220, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.087, height: 0.110, weight: 3.88, pack: 6, price: 3160 },
-    { model: 'VEKTOR PLUS HDV 1212', jis: 'YTX12-BS', capacity: 12, current: 200, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.087, height: 0.130, weight: 3.86, pack: 6, price: 2760 },
-    { model: 'VEKTOR PLUS HDV 1212.2', jis: 'YT14B-BS', capacity: 12, current: 170, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.070, height: 0.145, weight: 3.83, pack: 6, price: 2850 },
-    { model: 'VEKTOR PLUS HDV 1214', jis: 'YTX14-BS', capacity: 14, current: 200, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.087, height: 0.145, weight: 4.40, pack: 6, price: 3200 },
-    { model: 'VEKTOR PLUS HDV 1215', jis: 'YTX14L-BS', capacity: 14, current: 200, polarity: 'ОБРАТНАЯ', length: 0.150, width: 0.087, height: 0.145, weight: 4.40, pack: 6, price: 3200 },
-    { model: 'VEKTOR PLUS HDV 1214.1', jis: 'YTX14AH-BS', capacity: 14, current: 170, polarity: 'ПРЯМАЯ', length: 0.135, width: 0.087, height: 0.165, weight: 4.22, pack: 4, price: 3160 },
-    { model: 'VEKTOR PLUS HDV 1218.1', jis: 'YTX20CH-BS', capacity: 18, current: 270, polarity: 'ПРЯМАЯ', length: 0.150, width: 0.087, height: 0.161, weight: 5.68, pack: 4, price: 4500 },
-    { model: 'VEKTOR PLUS HDV 12201', jis: 'YTX20HL-BS', capacity: 20, current: 310, polarity: 'ОБРАТНАЯ', length: 0.175, width: 0.087, height: 0.155, weight: 6.20, pack: 3, price: 4850 },
-    { model: 'VEKTOR PLUS HDV 1220', jis: 'YTX24HL-BS', capacity: 24, current: 350, polarity: 'ОБРАТНАЯ', length: 0.205, width: 0.087, height: 0.162, weight: 7.03, pack: 3, price: 4800 },
-    { model: 'VEKTOR PLUS HDV 1218', jis: 'YTX20-BS', capacity: 20, current: 300, polarity: 'ПРЯМАЯ', length: 0.175, width: 0.087, height: 0.155, weight: 5.87, pack: 3, price: 4200 },
-    { model: 'VEKTOR PLUS HDV 1230', jis: 'YTX30HL-BS', capacity: 30, current: 385, polarity: 'ОБРАТНАЯ', length: 0.167, width: 0.127, height: 0.175, weight: 8.63, pack: 2, price: 5820 }
-];
-
-        // ============================================================
-        // 2. УПРАВЛЕНИЕ КОЛОНКАМИ (ПО УМОЛЧАНИЮ СКРЫТЫ)
-        // ============================================================
-        let dimVisible = false;
-        let specsVisible = false;
-
-        function toggleColumns(group) {
-            if (group === 'dimensions') {
-                dimVisible = !dimVisible;
-                document.getElementById('toggleDimensions').classList.toggle('active', dimVisible);
-                document.querySelectorAll('.col-dimensions').forEach(el => {
-                    el.style.display = dimVisible ? '' : 'none';
-                });
-            } else if (group === 'specs') {
-                specsVisible = !specsVisible;
-                document.getElementById('toggleSpecs').classList.toggle('active', specsVisible);
-                document.querySelectorAll('.col-specs').forEach(el => {
-                    el.style.display = specsVisible ? '' : 'none';
-                });
-            }
-        }
-
-        // ============================================================
-        // 3. ОСТАТКИ
+        // 1. ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
         // ============================================================
         let stocksLoaded = false;
         let stocksData = {};
 
+        // ============================================================
+        // 2. ЗАГРУЗКА ДАННЫХ
+        // ============================================================
         async function loadStocks() {
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbxU09cidHyeVB-y01-UmxgGZOkgQAZVFGCBY52kPAUvQOKIwWDoe9sBvpm3QApA8RVWMA/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyBW-0ZZuS-jvAnFiFsAWJrmRoujV0ex39FBz6-HaBjpDZxTth7qU9rcilhBLQ-6kuLOw/exec';
             
             try {
                 const response = await fetch(scriptURL);
                 const data = await response.json();
                 
-                if (data.result === 'success' && data.stocks && Object.keys(data.stocks).length > 0) {
-                    stocksData = data.stocks;
+                if (data.result === 'success' && data.data && Object.keys(data.data).length > 0) {
+                    stocksData = data.data;
                     stocksLoaded = true;
-                    
-                    products.forEach(p => {
-                        let stock = 0;
-                        
-                        // Формируем ключи для поиска
-                        const searchKeys = [
-                            p.model,
-                            p.model.replace('VEKTOR PLUS ', ''),
-                            p.model.split(' ').slice(-2).join(' '),
-                            p.model.replace(/\s/g, '')
-                        ];
-                        
-                        // Ищем в данных
-                        let found = false;
-                        for (const [name, qty] of Object.entries(stocksData)) {
-                            for (const key of searchKeys) {
-                                if (key && name.includes(key)) {
-                                    stock = qty;
-                                    found = true;
-                                    break;
-                                }
-                            }
-                            if (found) break;
-                        }
-                        
-                        p.stock = stock;
-                    });
                 } else {
                     stocksLoaded = false;
                     stocksData = {};
-                    products.forEach(p => p.stock = 0);
                 }
             } catch (error) {
                 console.warn('⚠️ Остатки не загружены:', error);
                 stocksLoaded = false;
                 stocksData = {};
-                products.forEach(p => p.stock = 0);
             }
             
             renderTable();
@@ -577,6 +471,28 @@
         }
 
         // ============================================================
+        // 3. УПРАВЛЕНИЕ КОЛОНКАМИ
+        // ============================================================
+        let dimVisible = false;
+        let specsVisible = false;
+
+        function toggleColumns(group) {
+            if (group === 'dimensions') {
+                dimVisible = !dimVisible;
+                document.getElementById('toggleDimensions').classList.toggle('active', dimVisible);
+                document.querySelectorAll('.col-dimensions').forEach(el => {
+                    el.style.display = dimVisible ? '' : 'none';
+                });
+            } else if (group === 'specs') {
+                specsVisible = !specsVisible;
+                document.getElementById('toggleSpecs').classList.toggle('active', specsVisible);
+                document.querySelectorAll('.col-specs').forEach(el => {
+                    el.style.display = specsVisible ? '' : 'none';
+                });
+            }
+        }
+
+        // ============================================================
         // 4. ОТРИСОВКА ТАБЛИЦЫ
         // ============================================================
         const thead = document.getElementById('table-header');
@@ -585,7 +501,9 @@
         function renderTable() {
             const showStockColumn = stocksLoaded && Object.keys(stocksData).length > 0;
             
+            // Строим заголовок
             let headerHtml = `<tr>
+                <th>Фото</th>
                 <th>Модель</th>
                 <th class="col-specs">Код JIS</th>
                 <th class="col-specs">Ёмкость, Ач</th>
@@ -599,7 +517,7 @@
                 <th>Кол-во</th>
                 <th>Общий вес, кг</th>
                 <th>Объем, м³</th>
-                <th>Цена за 1 шт, ₽</th>
+                <th>МРЦ, ₽</th>
                 <th>Итого, ₽</th>`;
             
             if (showStockColumn) {
@@ -608,55 +526,67 @@
             headerHtml += `</tr>`;
             thead.innerHTML = headerHtml;
 
+            // Строим строки
             let html = '';
-            products.forEach((p, index) => {
-                let stockDisplay = '';
-                let stockClass = '';
-                
-                if (showStockColumn) {
-                    if (p.stock > 0) {
-                        stockDisplay = `${p.stock} шт.`;
-                        if (p.stock < 5) stockClass = 'stock-low';
-                        else if (p.stock < 20) stockClass = 'stock-medium';
-                        else stockClass = 'stock-high';
-                    } else {
-                        stockDisplay = 'Нет в наличии';
-                        stockClass = 'stock-zero';
+            const products = Object.entries(stocksData);
+            
+            if (products.length === 0) {
+                html = `<tr><td colspan="20" style="text-align: center; padding: 30px; color: #64748b;">Нет данных для отображения</td></tr>`;
+            } else {
+                products.forEach(([name, item], index) => {
+                    let stockDisplay = '';
+                    let stockClass = '';
+                    
+                    if (showStockColumn) {
+                        if (item.stock > 0) {
+                            stockDisplay = `${item.stock} шт.`;
+                            if (item.stock < 5) stockClass = 'stock-low';
+                            else if (item.stock < 20) stockClass = 'stock-medium';
+                            else stockClass = 'stock-high';
+                        } else {
+                            stockDisplay = 'Нет в наличии';
+                            stockClass = 'stock-zero';
+                        }
                     }
-                }
-                
-                html += `
-                    <tr id="row-${index}">
-                        <td class="model">${p.model}</td>
-                        <td class="col-specs">${p.jis}</td>
-                        <td class="col-specs">${p.capacity}</td>
-                        <td class="col-specs">${p.current}</td>
-                        <td class="col-specs">${p.polarity}</td>
-                        <td class="col-dimensions">${p.length.toFixed(3)}</td>
-                        <td class="col-dimensions">${p.width.toFixed(3)}</td>
-                        <td class="col-dimensions">${p.height.toFixed(3)}</td>
-                        <td class="col-dimensions">${p.weight.toFixed(2)}</td>
-                        <td>${p.pack}</td>
-                        <td>
-                            <div class="qty-control">
-                                <button type="button" class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
-                                <input type="number" class="qty-input" id="qty-${index}" min="0" value="0" step="1" oninput="updateTotals()" />
-                                <button type="button" class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
-                            </div>
-                        </td>
-                        <td id="row-weight-${index}">0</td>
-                        <td id="row-volume-${index}">0</td>
-                        <td>${p.price.toLocaleString('ru-RU')}</td>
-                        <td id="row-price-${index}">0</td>`;
-                
-                if (showStockColumn) {
-                    html += `<td class="${stockClass}">${stockDisplay}</td>`;
-                }
-                
-                html += `</tr>`;
-            });
+                    
+                    let priceDisplay = item.price > 0 ? item.price.toLocaleString('ru-RU') : '—';
+                    let imageHtml = item.image ? `<img src="${item.image}" alt="${name}" style="max-width: 50px; height: auto; border-radius: 4px;" />` : '';
+                    
+                    html += `
+                        <tr id="row-${index}">
+                            <td>${imageHtml}</td>
+                            <td class="model">${name}</td>
+                            <td class="col-specs">${item.jis || '—'}</td>
+                            <td class="col-specs">${item.capacity || '—'}</td>
+                            <td class="col-specs">${item.current || '—'}</td>
+                            <td class="col-specs">${item.polarity || '—'}</td>
+                            <td class="col-dimensions">${item.length ? item.length.toFixed(3) : '—'}</td>
+                            <td class="col-dimensions">${item.width ? item.width.toFixed(3) : '—'}</td>
+                            <td class="col-dimensions">${item.height ? item.height.toFixed(3) : '—'}</td>
+                            <td class="col-dimensions">${item.weight ? item.weight.toFixed(2) : '—'}</td>
+                            <td>${item.pack || '—'}</td>
+                            <td>
+                                <div class="qty-control">
+                                    <button type="button" class="qty-btn" onclick="changeQty('${name}', -1)">−</button>
+                                    <input type="number" class="qty-input" id="qty-${index}" min="0" value="0" step="1" oninput="updateTotals()" />
+                                    <button type="button" class="qty-btn" onclick="changeQty('${name}', 1)">+</button>
+                                </div>
+                            </td>
+                            <td id="row-weight-${index}">0</td>
+                            <td id="row-volume-${index}">0</td>
+                            <td>${priceDisplay}</td>
+                            <td id="row-price-${index}">0</td>`;
+                    
+                    if (showStockColumn) {
+                        html += `<td class="${stockClass}">${stockDisplay}</td>`;
+                    }
+                    
+                    html += `</tr>`;
+                });
+            }
             tbody.innerHTML = html;
 
+            // Применяем состояние видимости колонок
             document.querySelectorAll('.col-dimensions').forEach(el => {
                 el.style.display = dimVisible ? '' : 'none';
             });
@@ -673,7 +603,11 @@
         // ============================================================
         // 5. УПРАВЛЕНИЕ КОЛИЧЕСТВОМ
         // ============================================================
-        function changeQty(index, delta) {
+        function changeQty(modelName, delta) {
+            const products = Object.entries(stocksData);
+            const index = products.findIndex(([name]) => name === modelName);
+            if (index === -1) return;
+            
             const qtyInput = document.getElementById(`qty-${index}`);
             let val = parseInt(qtyInput.value) || 0;
             val += delta;
@@ -687,9 +621,12 @@
         // ============================================================
         function filterCatalog() {
             const filter = document.getElementById('searchInput').value.toLowerCase().trim();
-            products.forEach((p, index) => {
+            const products = Object.entries(stocksData);
+            products.forEach(([name], index) => {
                 const row = document.getElementById(`row-${index}`);
-                row.style.display = p.model.toLowerCase().includes(filter) ? '' : 'none';
+                if (row) {
+                    row.style.display = name.toLowerCase().includes(filter) ? '' : 'none';
+                }
             });
         }
 
@@ -698,24 +635,29 @@
         // ============================================================
         function updateTotals() {
             let totalWeight = 0, totalVolume = 0, totalPrice = 0, totalPacks = 0;
+            const products = Object.entries(stocksData);
 
-            products.forEach((p, index) => {
+            products.forEach(([name, item], index) => {
                 const qtyInput = document.getElementById(`qty-${index}`);
-                const qty = parseInt(qtyInput.value) || 0;
+                const qty = parseInt(qtyInput ? qtyInput.value : 0) || 0;
 
-                const rowPrice = p.price * qty;
-                const rowWeight = p.weight * qty;
-                const rowVolume = p.length * p.width * p.height * qty;
+                const rowPrice = item.price * qty;
+                const rowWeight = item.weight * qty;
+                const rowVolume = item.length * item.width * item.height * qty;
 
-                document.getElementById(`row-price-${index}`).textContent = rowPrice.toLocaleString('ru-RU');
-                document.getElementById(`row-weight-${index}`).textContent = rowWeight.toFixed(2);
-                document.getElementById(`row-volume-${index}`).textContent = rowVolume.toFixed(4);
+                const priceCell = document.getElementById(`row-price-${index}`);
+                const weightCell = document.getElementById(`row-weight-${index}`);
+                const volumeCell = document.getElementById(`row-volume-${index}`);
+
+                if (priceCell) priceCell.textContent = rowPrice.toLocaleString('ru-RU');
+                if (weightCell) weightCell.textContent = rowWeight.toFixed(2);
+                if (volumeCell) volumeCell.textContent = rowVolume.toFixed(4);
 
                 if (qty > 0) {
                     totalPrice += rowPrice;
                     totalWeight += rowWeight;
                     totalVolume += rowVolume;
-                    totalPacks += Math.ceil(qty / p.pack);
+                    totalPacks += Math.ceil(qty / (item.pack || 1));
                 }
             });
 
@@ -728,17 +670,21 @@
         // ============================================================
         function roundToPacks() {
             let changed = false;
-            products.forEach((p, index) => {
+            const products = Object.entries(stocksData);
+            
+            products.forEach(([name, item], index) => {
                 const qtyInput = document.getElementById(`qty-${index}`);
+                if (!qtyInput) return;
                 let qty = parseInt(qtyInput.value) || 0;
-                if (qty > 0) {
-                    const rounded = Math.ceil(qty / p.pack) * p.pack;
+                if (qty > 0 && item.pack) {
+                    const rounded = Math.ceil(qty / item.pack) * item.pack;
                     if (rounded !== qty) {
                         qtyInput.value = rounded;
                         changed = true;
                     }
                 }
             });
+            
             if (changed) {
                 updateTotals();
                 alert('✅ Количество округлено до полных упаковок.');
@@ -861,23 +807,24 @@
             let hasItems = false;
             let totalWeight = 0, totalVolume = 0, totalPrice = 0, totalPacks = 0;
             let orderDetails = '';
+            const products = Object.entries(stocksData);
 
-            products.forEach((p, index) => {
+            products.forEach(([model, item], index) => {
                 const qtyInput = document.getElementById(`qty-${index}`);
-                const qty = parseInt(qtyInput.value) || 0;
+                const qty = parseInt(qtyInput ? qtyInput.value : 0) || 0;
                 if (qty > 0) {
                     hasItems = true;
-                    const rowPrice = p.price * qty;
-                    const rowWeight = p.weight * qty;
-                    const rowVolume = p.length * p.width * p.height * qty;
-                    const packs = Math.ceil(qty / p.pack);
+                    const rowPrice = item.price * qty;
+                    const rowWeight = item.weight * qty;
+                    const rowVolume = item.length * item.width * item.height * qty;
+                    const packs = Math.ceil(qty / (item.pack || 1));
 
                     totalPrice += rowPrice;
                     totalWeight += rowWeight;
                     totalVolume += rowVolume;
                     totalPacks += packs;
 
-                    orderDetails += `${p.model} | ${qty} шт. (${packs} упак.) | ${rowPrice.toLocaleString('ru-RU')} ₽ | вес: ${rowWeight.toFixed(2)} кг | объем: ${rowVolume.toFixed(4)} м³\n`;
+                    orderDetails += `${model} | ${qty} шт. (${packs} упак.) | ${rowPrice.toLocaleString('ru-RU')} ₽ | вес: ${rowWeight.toFixed(2)} кг | объем: ${rowVolume.toFixed(4)} м³\n`;
                 }
             });
 
@@ -910,12 +857,12 @@
             clientBody += '-'.repeat(30) + '\n';
             
             let clientOrderDetails = '';
-            products.forEach((p, index) => {
+            products.forEach(([model, item], index) => {
                 const qtyInput = document.getElementById(`qty-${index}`);
-                const qty = parseInt(qtyInput.value) || 0;
+                const qty = parseInt(qtyInput ? qtyInput.value : 0) || 0;
                 if (qty > 0) {
-                    const rowPrice = p.price * qty;
-                    clientOrderDetails += `${p.model} | ${qty} шт. | ${rowPrice.toLocaleString('ru-RU')} ₽\n`;
+                    const rowPrice = item.price * qty;
+                    clientOrderDetails += `${model} | ${qty} шт. | ${rowPrice.toLocaleString('ru-RU')} ₽\n`;
                 }
             });
             clientBody += clientOrderDetails;
@@ -930,7 +877,7 @@
             btn.disabled = true;
             btn.textContent = '⏳ Отправка...';
 
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbxU09cidHyeVB-y01-UmxgGZOkgQAZVFGCBY52kPAUvQOKIwWDoe9sBvpm3QApA8RVWMA/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyBW-0ZZuS-jvAnFiFsAWJrmRoujV0ex39FBz6-HaBjpDZxTth7qU9rcilhBLQ-6kuLOw/exec';
 
             const payload = {
                 'company': company,
@@ -969,8 +916,10 @@
         // 13. ОЧИСТКА
         // ============================================================
         function clearAll() {
+            const products = Object.entries(stocksData);
             products.forEach((_, index) => {
-                document.getElementById(`qty-${index}`).value = 0;
+                const qtyInput = document.getElementById(`qty-${index}`);
+                if (qtyInput) qtyInput.value = 0;
             });
             document.getElementById('clientCompany').value = '';
             document.getElementById('clientPhone').value = '';
