@@ -433,7 +433,7 @@
         // 2. ЗАГРУЗКА ДАННЫХ
         // ============================================================
         async function loadStocks() {
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbyjwoK_GkpF0lvA3NMANS7haCkxUmEoNSY5DPZoa2ImemW2dkk3vYduFm3viVsjXpC6Hw/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwwghIgTzuU6yHqVkASZepZbKiGU27sXi_d_QQyoA28wBI3f5UMUSOlvFxpjgfR-QhftA/exec';
             
             try {
                 const response = await fetch(scriptURL);
@@ -823,7 +823,7 @@
             btn.disabled = true;
             btn.textContent = '⏳ Отправка...';
 
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbyjwoK_GkpF0lvA3NMANS7haCkxUmEoNSY5DPZoa2ImemW2dkk3vYduFm3viVsjXpC6Hw/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwwghIgTzuU6yHqVkASZepZbKiGU27sXi_d_QQyoA28wBI3f5UMUSOlvFxpjgfR-QhftA/exec';
 
             const body = `Компания: ${company}\nКонтакт: ${name}\nТелефон: ${phone}\nEmail: ${email}\nКомментарий: ${comment}\n\nЗаказ:\n${orderDetails}\n\nИтого: ${totalPrice.toLocaleString('ru-RU')} ₽`;
 
