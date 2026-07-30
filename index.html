@@ -430,7 +430,7 @@
         // 2. ЗАГРУЗКА ДАННЫХ
         // ============================================================
         function loadStocks() {
-            var scriptURL = 'https://script.google.com/macros/s/AKfycbwgq9pKQmt_dPJ0YLlKJGuF-tRo_GhYLa0oU2R0Z3n7_W5dRIoODcPlVHvVL8pmzQ51EA/exec';
+            var scriptURL = 'https://script.google.com/macros/s/AKfycbw0hMJ7pbC9RMbUVzG-O-9upNgilKzJNBps3UH2r33VdHkMwavQd7zELUsc-eGHB2zA/exec';
             
             fetch(scriptURL)
                 .then(function(response) { return response.json(); })
@@ -833,7 +833,7 @@
             btn.disabled = true;
             btn.textContent = '⏳ Отправка...';
 
-            var scriptURL = 'https://script.google.com/macros/s/AKfycbwgq9pKQmt_dPJ0YLlKJGuF-tRo_GhYLa0oU2R0Z3n7_W5dRIoODcPlVHvVL8pmzQ51EA/exec';
+            var scriptURL = 'https://script.google.com/macros/s/AKfycbw0hMJ7pbC9RMbUVzG-O-9upNgilKzJNBps3UH2r33VdHkMwavQd7zELUsc-eGHB2zA/exec';
 
             var body = 'Компания: ' + company + '\nКонтакт: ' + name + '\nТелефон: ' + phone + '\nEmail: ' + email + '\nКомментарий: ' + comment + '\n\nЗаказ:\n' + orderDetails + '\n\nИтого: ' + totalPrice.toLocaleString('ru-RU') + ' ₽';
 
