@@ -11,7 +11,7 @@
             background: #f4f7fc;
             margin: 0;
             padding: 15px;
-            padding-bottom: 110px;
+            padding-bottom: 120px;
             color: #2c3e50;
         }
         .container {
@@ -34,7 +34,6 @@
             margin-bottom: 20px;
             font-size: 0.95rem;
         }
-        
         .header-links {
             display: flex;
             flex-wrap: wrap;
@@ -57,10 +56,7 @@
             background: #f0f5ff;
             text-decoration: underline;
         }
-        .header-links .divider {
-            color: #cbd5e1;
-            font-weight: 300;
-        }
+        .header-links .divider { color: #cbd5e1; }
 
         .search-box { margin-bottom: 15px; }
         .search-input {
@@ -90,7 +86,6 @@
         .column-toggle-group .label {
             font-weight: 600;
             color: #1a3b5d;
-            margin-right: 10px;
             font-size: 0.9rem;
         }
         .toggle-btn {
@@ -104,10 +99,6 @@
             transition: 0.2s;
             color: #334155;
         }
-        .toggle-btn:hover {
-            background: #f1f5f9;
-            border-color: #1a3b5d;
-        }
         .toggle-btn.active {
             background: #1a3b5d;
             color: white;
@@ -118,6 +109,7 @@
             overflow-x: auto;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
+            min-height: 200px;
         }
         table {
             width: 100%;
@@ -140,12 +132,7 @@
         }
         tr:hover { background: #f8fafc; }
 
-        .model {
-            font-weight: 600;
-            text-align: left;
-            white-space: nowrap;
-            color: #0f172a;
-        }
+        .model { font-weight: 600; text-align: left; color: #0f172a; white-space: nowrap; }
         .qty-control {
             display: inline-flex;
             align-items: center;
@@ -166,30 +153,20 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            user-select: none;
         }
         .qty-btn:hover { background: #e2e8f0; }
         .qty-input {
-            width: 42px;
+            width: 44px;
             height: 28px;
-            padding: 0;
             text-align: center;
             border: none;
             border-left: 1px solid #cbd5e1;
             border-right: 1px solid #cbd5e1;
             font-size: 13px;
             font-weight: 600;
-            -moz-appearance: textfield;
         }
-        .qty-input::-webkit-outer-spin-button,
-        .qty-input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        .qty-input:focus {
-            outline: none;
-            background: #f0fdf4;
-        }
+        .qty-input:focus { outline: none; background: #f0fdf4; }
+
         .sticky-totals {
             position: fixed;
             bottom: 0;
@@ -215,16 +192,12 @@
         .totals-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px 20px;
+            gap: 12px 24px;
             font-size: 0.95rem;
-        }
-        .total-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
         .total-item b { color: #38bdf8; font-size: 1.1rem; }
         .total-price-item b { color: #4ade80; font-size: 1.25rem; }
+
         .order-section {
             margin-top: 30px;
             background: #f8fafc;
@@ -232,17 +205,7 @@
             border-radius: 10px;
             border: 1px solid #e2e8f0;
         }
-        .order-section h3 {
-            margin-top: 0;
-            color: #1a3b5d;
-            margin-bottom: 15px;
-        }
-        .actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
+        .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
         .actions input, .actions textarea {
             padding: 10px 14px;
             border: 1px solid #cbd5e1;
@@ -250,45 +213,9 @@
             font-size: 14px;
             flex: 1 1 200px;
         }
-        .actions input:focus, .actions textarea:focus {
-            outline: none;
-            border-color: #1a3b5d;
-        }
         .actions textarea { flex: 1 1 100%; resize: vertical; }
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.95rem;
-            cursor: pointer;
-            margin: 5px 0 10px 0;
-            flex-wrap: wrap;
-        }
-        .checkbox-group input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-        .checkbox-group label {
-            cursor: pointer;
-            color: #1a3b5d;
-            font-weight: 500;
-        }
-        .email-required-hint {
-            font-size: 0.8rem;
-            color: #ef4444;
-            margin-left: 5px;
-            display: none;
-        }
-        .email-required-hint.visible {
-            display: inline;
-        }
-        .btn-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 15px;
-        }
+
+        .btn-group { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 15px; }
         .btn {
             padding: 12px 24px;
             border: none;
@@ -305,77 +232,55 @@
         .btn-submit { background: #16a34a; }
         .btn-submit:hover { background: #15803d; }
         .btn-round { background: #0284c7; }
-        .btn-round:hover { background: #0369a1; }
         .btn-clear { background: #64748b; }
-        .btn-clear:hover { background: #475569; }
         .btn-update { background: #f59e0b; }
-        .btn-update:hover { background: #d97706; }
         .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-        .required { color: #ef4444; }
-        .error-input {
-            border-color: #ef4444 !important;
-            background-color: #fef2f2 !important;
-        }
-        .required-field {
-            border-color: #ef4444 !important;
-        }
+        .error-input { border-color: #ef4444 !important; background-color: #fef2f2 !important; }
+
         .stock-high { color: #16a34a; font-weight: 600; }
         .stock-medium { color: #f59e0b; font-weight: 600; }
         .stock-low { color: #ef4444; font-weight: 600; }
         .stock-zero { color: #ef4444; font-weight: 700; }
-        .footer-note {
-            margin-top: 25px;
-            font-size: 0.85em;
-            color: #64748b;
+
+        .loading-state {
+            padding: 40px;
             text-align: center;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 15px;
-        }
-        @media (max-width: 768px) {
-            body { padding: 10px; padding-bottom: 150px; }
-            .container { padding: 15px; }
-            .totals-content { flex-direction: column; align-items: stretch; gap: 10px; }
-            .totals-grid { justify-content: space-between; font-size: 0.85rem; }
-            .qty-control { scale: 0.9; }
-            .column-toggle-group .label { font-size: 0.8rem; }
-            .toggle-btn { font-size: 0.75rem; padding: 4px 12px; }
-            th, td { font-size: 11px; padding: 4px 3px; }
-            .model { font-size: 11px; }
+            font-size: 1.1rem;
+            color: #64748b;
         }
     </style>
 </head>
 <body>
 
-    <div class="container" id="app">
+    <div class="container">
         <div class="header">
             <h1 class="header-title">🔋 Каталог аккумуляторов VEKTOR</h1>
-            
             <div class="header-links">
                 <a href="https://vektor-moto.ru" target="_blank" rel="noopener noreferrer">🏍️ vektor-moto.ru</a>
                 <span class="divider">|</span>
                 <a href="https://vektor-energy.ru/catalog/" target="_blank" rel="noopener noreferrer">🏭 Промышленные АКБ</a>
             </div>
-            
-            <p class="subtitle">Выберите количество нужных позиций. Итоги по заказу рассчитываются автоматически. Цена указана с НДС 22%.</p>
+            <p class="subtitle">Выберите количество нужных позиций. Итоги по заказу рассчитываются автоматически. Цены указаны с НДС.</p>
         </div>
 
         <div class="search-box">
-            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Быстрый поиск по названию модели..." oninput="filterCatalog()" />
+            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Быстрый поиск по названию или коду JIS..." oninput="filterCatalog()" />
         </div>
 
         <div class="column-toggle-group">
-            <span class="label">📋 Показать:</span>
+            <span class="label">📋 Отображение колонок:</span>
             <button class="toggle-btn" id="toggleDimensions" onclick="toggleColumns('dimensions')">📐 Габариты</button>
             <button class="toggle-btn" id="toggleSpecs" onclick="toggleColumns('specs')">⚡ Характеристики</button>
-            <span style="font-size:0.8rem; color:#64748b; margin-left:auto;">(нажмите, чтобы показать/скрыть)</span>
         </div>
 
         <div class="table-wrap">
             <table>
-                <thead id="table-header">
-                    <!-- Заголовок будет собран в JavaScript -->
-                </thead>
-                <tbody id="catalog-body"></tbody>
+                <thead id="table-header"></thead>
+                <tbody id="catalog-body">
+                    <tr>
+                        <td colspan="20" class="loading-state">⏳ Загрузка каталога и остатков...</td>
+                    </tr>
+                </tbody>
             </table>
         </div>
 
@@ -384,16 +289,11 @@
             <div class="actions">
                 <input type="text" id="clientCompany" placeholder="Название компании *" />
                 <input type="tel" id="clientPhone" placeholder="+7 (___) ___-__-__" maxlength="18" />
-                <input type="text" id="clientName" placeholder="Контактное лицо (необязательно)" />
+                <input type="text" id="clientName" placeholder="Контактное лицо" />
             </div>
             <div class="actions">
-                <input type="email" id="clientEmail" placeholder="Email (для счета и копии)" />
-                <textarea id="clientComment" rows="2" placeholder="Комментарий к заказу (адрес доставки, особые пожелания)"></textarea>
-            </div>
-            <div class="checkbox-group">
-                <input type="checkbox" id="sendCopy" onchange="toggleEmailRequired()" />
-                <label for="sendCopy">📧 Отправить копию заказа на этот email</label>
-                <span class="email-required-hint" id="emailRequiredHint">* обязательно</span>
+                <input type="email" id="clientEmail" placeholder="Email (для счета)" />
+                <textarea id="clientComment" rows="2" placeholder="Комментарий к заказу (адрес доставки, особенности)"></textarea>
             </div>
             <div class="btn-group">
                 <button class="btn btn-submit" onclick="sendOrder()">📨 Оформить заказ</button>
@@ -401,107 +301,82 @@
                 <button class="btn btn-update" onclick="refreshStocks()">🔄 Обновить остатки</button>
                 <button class="btn btn-clear" onclick="clearAll()">🗑️ Очистить все</button>
             </div>
-            <div style="margin-top: 12px; font-size: 0.85em; color: #64748b;">
-                <span class="required">*</span> — поля обязательные для заполнения
-            </div>
-        </div>
-
-        <div class="footer-note">
-            ⚡ Цены указаны с НДС 22%. Для оформления заказа нажмите "Оформить заказ".
         </div>
     </div>
 
+    <!-- Фиксированная нижняя панель итогов -->
     <div class="sticky-totals">
         <div class="totals-content">
             <div class="totals-grid">
-                <div class="total-item total-price-item">💰 Итого (с НДС): <b id="total-price">0</b> ₽</div>
+                <div class="total-item total-price-item">💰 Итого: <b id="total-price">0</b> ₽</div>
                 <div class="total-item">📦 Упаковок: <b id="total-packs">0</b> шт.</div>
+                <div class="total-item">⚖️ Общий вес: <b id="total-weight">0</b> кг</div>
+                <div class="total-item">📐 Общий объем: <b id="total-volume">0</b> м³</div>
             </div>
         </div>
     </div>
 
     <script>
-        // ============================================================
-        // 1. ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
-        // ============================================================
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwgq9pKQmt_dPJ0YLlKJGuF-tRo_GhYLa0oU2R0Z3n7_W5dRIoODcPlVHvVL8pmzQ51EA/exec';
+        
         let stocksLoaded = false;
         let stocksData = {};
+        let dimVisible = false;
+        let specsVisible = false;
 
-        // ============================================================
-        // 2. ЗАГРУЗКА ДАННЫХ
-        // ============================================================
         async function loadStocks() {
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwgq9pKQmt_dPJ0YLlKJGuF-tRo_GhYLa0oU2R0Z3n7_W5dRIoODcPlVHvVL8pmzQ51EA/exec';
-            
             try {
-                const response = await fetch(scriptURL);
+                const response = await fetch(SCRIPT_URL);
                 const data = await response.json();
                 
-                if (data.result === 'success' && data.data && Object.keys(data.data).length > 0) {
+                if (data.result === 'success' && data.data) {
                     stocksData = data.data;
                     stocksLoaded = true;
                 } else {
                     stocksLoaded = false;
-                    stocksData = {};
                 }
             } catch (error) {
-                console.warn('⚠️ Остатки не загружены:', error);
+                console.warn('⚠️ Ошибка загрузки остатков:', error);
                 stocksLoaded = false;
-                stocksData = {};
             }
-            
             renderTable();
         }
 
         async function refreshStocks() {
             const btn = document.querySelector('.btn-update');
             btn.disabled = true;
-            btn.textContent = '⏳ Загрузка...';
-            
+            btn.textContent = '⏳ Обновление...';
             await loadStocks();
-            
             btn.disabled = false;
             btn.textContent = '🔄 Обновить остатки';
-            
-            if (stocksLoaded) {
-                alert('✅ Остатки обновлены!');
-            } else {
-                alert('ℹ️ Файл с остатками не найден. Колонка скрыта.');
-            }
         }
-
-        // ============================================================
-        // 3. УПРАВЛЕНИЕ КОЛОНКАМИ
-        // ============================================================
-        let dimVisible = false;
-        let specsVisible = false;
 
         function toggleColumns(group) {
             if (group === 'dimensions') {
                 dimVisible = !dimVisible;
                 document.getElementById('toggleDimensions').classList.toggle('active', dimVisible);
-                document.querySelectorAll('.col-dimensions').forEach(el => {
-                    el.style.display = dimVisible ? '' : 'none';
-                });
             } else if (group === 'specs') {
                 specsVisible = !specsVisible;
                 document.getElementById('toggleSpecs').classList.toggle('active', specsVisible);
-                document.querySelectorAll('.col-specs').forEach(el => {
-                    el.style.display = specsVisible ? '' : 'none';
-                });
             }
+            applyColumnVisibility();
         }
 
-        // ============================================================
-        // 4. ОТРИСОВКА ТАБЛИЦЫ
-        // ============================================================
-        const thead = document.getElementById('table-header');
-        const tbody = document.getElementById('catalog-body');
+        function applyColumnVisibility() {
+            document.querySelectorAll('.col-dimensions').forEach(el => el.style.display = dimVisible ? '' : 'none');
+            document.querySelectorAll('.col-specs').forEach(el => el.style.display = specsVisible ? '' : 'none');
+        }
 
         function renderTable() {
-            const showStockColumn = stocksLoaded && Object.keys(stocksData).length > 0;
-            
-            // Строим заголовок
+            const thead = document.getElementById('table-header');
+            const tbody = document.getElementById('catalog-body');
+            const products = Object.entries(stocksData);
+
+            if (products.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="20" style="padding:30px; color:#64748b;">Данные временно недоступны или каталог пуст.</td></tr>`;
+                return;
+            }
+
             let headerHtml = `<tr>
                 <th>Фото</th>
                 <th>Модель</th>
@@ -509,130 +384,94 @@
                 <th class="col-specs">Ёмкость, Ач</th>
                 <th class="col-specs">Пусковой ток, А</th>
                 <th class="col-specs">Полярность</th>
-                <th class="col-dimensions">Длина, м</th>
-                <th class="col-dimensions">Ширина, м</th>
-                <th class="col-dimensions">Высота, м</th>
+                <th class="col-dimensions">Длина</th>
+                <th class="col-dimensions">Ширина</th>
+                <th class="col-dimensions">Высота</th>
                 <th class="col-dimensions">Вес, кг</th>
                 <th>шт/упак</th>
                 <th>Кол-во</th>
                 <th>Общий вес, кг</th>
                 <th>Объем, м³</th>
-                <th>МРЦ, ₽</th>
-                <th>Итого, ₽</th>`;
-            
-            if (showStockColumn) {
-                headerHtml += `<th>Наличие (склад Новосибирск)</th>`;
-            }
-            headerHtml += `</tr>`;
+                <th>Цена, ₽</th>
+                <th>Итого, ₽</th>
+                <th>Наличие</th>
+            </tr>`;
             thead.innerHTML = headerHtml;
 
-            // Строим строки
             let html = '';
-            const products = Object.entries(stocksData);
-            
-            if (products.length === 0) {
-                html = `<tr><td colspan="20" style="text-align: center; padding: 30px; color: #64748b;">Нет данных для отображения</td></tr>`;
-            } else {
-                products.forEach(([name, item], index) => {
-                    let stockDisplay = '';
-                    let stockClass = '';
-                    
-                    if (showStockColumn) {
-                        if (item.stock > 0) {
-                            stockDisplay = `${item.stock} шт.`;
-                            if (item.stock < 5) stockClass = 'stock-low';
-                            else if (item.stock < 20) stockClass = 'stock-medium';
-                            else stockClass = 'stock-high';
-                        } else {
-                            stockDisplay = 'Нет в наличии';
-                            stockClass = 'stock-zero';
-                        }
-                    }
-                    
-                    let priceDisplay = item.price > 0 ? item.price.toLocaleString('ru-RU') : '—';
-                    let imageHtml = item.image ? `<img src="${item.image}" alt="${name}" style="max-width: 50px; height: auto; border-radius: 4px;" />` : '';
-                    
-                    html += `
-                        <tr id="row-${index}">
-                            <td>${imageHtml}</td>
-                            <td class="model">${name}</td>
-                            <td class="col-specs">${item.jis || '—'}</td>
-                            <td class="col-specs">${item.capacity || '—'}</td>
-                            <td class="col-specs">${item.current || '—'}</td>
-                            <td class="col-specs">${item.polarity || '—'}</td>
-                            <td class="col-dimensions">${item.length ? item.length.toFixed(3) : '—'}</td>
-                            <td class="col-dimensions">${item.width ? item.width.toFixed(3) : '—'}</td>
-                            <td class="col-dimensions">${item.height ? item.height.toFixed(3) : '—'}</td>
-                            <td class="col-dimensions">${item.weight ? item.weight.toFixed(2) : '—'}</td>
-                            <td>${item.pack || '—'}</td>
-                            <td>
-                                <div class="qty-control">
-                                    <button type="button" class="qty-btn" onclick="changeQty('${name}', -1)">−</button>
-                                    <input type="number" class="qty-input" id="qty-${index}" min="0" value="0" step="1" oninput="updateTotals()" />
-                                    <button type="button" class="qty-btn" onclick="changeQty('${name}', 1)">+</button>
-                                </div>
-                            </td>
-                            <td id="row-weight-${index}">0</td>
-                            <td id="row-volume-${index}">0</td>
-                            <td>${priceDisplay}</td>
-                            <td id="row-price-${index}">0</td>`;
-                    
-                    if (showStockColumn) {
-                        html += `<td class="${stockClass}">${stockDisplay}</td>`;
-                    }
-                    
-                    html += `</tr>`;
-                });
-            }
+            products.forEach(([name, item], index) => {
+                let stockDisplay = item.stock > 0 ? `${item.stock} шт.` : 'Нет в наличии';
+                let stockClass = item.stock > 20 ? 'stock-high' : (item.stock > 5 ? 'stock-medium' : 'stock-low');
+                if (item.stock <= 0) stockClass = 'stock-zero';
+
+                let priceDisplay = item.price > 0 ? item.price.toLocaleString('ru-RU') : '—';
+                let imageHtml = item.image ? `<img src="${item.image}" alt="${name}" style="max-width: 45px; border-radius: 4px;" />` : '';
+
+                html += `
+                    <tr id="row-${index}">
+                        <td>${imageHtml}</td>
+                        <td class="model">${name}</td>
+                        <td class="col-specs">${item.jis || '—'}</td>
+                        <td class="col-specs">${item.capacity || '—'}</td>
+                        <td class="col-specs">${item.current || '—'}</td>
+                        <td class="col-specs">${item.polarity || '—'}</td>
+                        <td class="col-dimensions">${item.length || '—'}</td>
+                        <td class="col-dimensions">${item.width || '—'}</td>
+                        <td class="col-dimensions">${item.height || '—'}</td>
+                        <td class="col-dimensions">${item.weight || '—'}</td>
+                        <td>${item.pack || 1}</td>
+                        <td>
+                            <div class="qty-control">
+                                <button type="button" class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
+                                <input type="number" class="qty-input" id="qty-${index}" min="0" value="0" oninput="updateTotals()" />
+                                <button type="button" class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+                            </div>
+                        </td>
+                        <td id="row-weight-${index}">0</td>
+                        <td id="row-volume-${index}">0</td>
+                        <td>${priceDisplay}</td>
+                        <td id="row-price-${index}">0</td>
+                        <td class="${stockClass}">${stockDisplay}</td>
+                    </tr>`;
+            });
+
             tbody.innerHTML = html;
-
-            // Применяем состояние видимости колонок
-            document.querySelectorAll('.col-dimensions').forEach(el => {
-                el.style.display = dimVisible ? '' : 'none';
-            });
-            document.querySelectorAll('.col-specs').forEach(el => {
-                el.style.display = specsVisible ? '' : 'none';
-            });
-            
-            document.getElementById('toggleDimensions').classList.toggle('active', dimVisible);
-            document.getElementById('toggleSpecs').classList.toggle('active', specsVisible);
-
+            applyColumnVisibility();
             updateTotals();
         }
 
-        // ============================================================
-        // 5. УПРАВЛЕНИЕ КОЛИЧЕСТВОМ
-        // ============================================================
-        function changeQty(modelName, delta) {
-            const products = Object.entries(stocksData);
-            const index = products.findIndex(([name]) => name === modelName);
-            if (index === -1) return;
-            
+        function changeQty(index, delta) {
             const qtyInput = document.getElementById(`qty-${index}`);
+            if (!qtyInput) return;
             let val = parseInt(qtyInput.value) || 0;
-            val += delta;
-            if (val < 0) val = 0;
+            val = Math.max(0, val + delta);
             qtyInput.value = val;
             updateTotals();
         }
 
-        // ============================================================
-        // 6. ПОИСК ПО МОДЕЛИ
-        // ============================================================
         function filterCatalog() {
             const filter = document.getElementById('searchInput').value.toLowerCase().trim();
             const products = Object.entries(stocksData);
-            products.forEach(([name], index) => {
+            products.forEach(([name, item], index) => {
                 const row = document.getElementById(`row-${index}`);
                 if (row) {
-                    row.style.display = name.toLowerCase().includes(filter) ? '' : 'none';
+                    const matchName = name.toLowerCase().includes(filter);
+                    const matchJis = item.jis && item.jis.toLowerCase().includes(filter);
+                    row.style.display = (matchName || matchJis) ? '' : 'none';
                 }
             });
         }
 
-        // ============================================================
-        // 7. ПЕРЕСЧЕТ ИТОГОВ
-        // ============================================================
+        // Автоматический корректный расчет объема вне зависимости от единиц (мм или м)
+        function calculateVolume(l, w, h) {
+            if (!l || !w || !h) return 0;
+            // Если габариты больше 10, считаем их в миллиметрах
+            if (l > 10 || w > 10 || h > 10) {
+                return (l / 1000) * (w / 1000) * (h / 1000);
+            }
+            return l * w * h;
+        }
+
         function updateTotals() {
             let totalWeight = 0, totalVolume = 0, totalPrice = 0, totalPacks = 0;
             const products = Object.entries(stocksData);
@@ -641,9 +480,10 @@
                 const qtyInput = document.getElementById(`qty-${index}`);
                 const qty = parseInt(qtyInput ? qtyInput.value : 0) || 0;
 
-                const rowPrice = item.price * qty;
-                const rowWeight = item.weight * qty;
-                const rowVolume = item.length * item.width * item.height * qty;
+                const unitVolume = calculateVolume(item.length, item.width, item.height);
+                const rowPrice = (item.price || 0) * qty;
+                const rowWeight = (item.weight || 0) * qty;
+                const rowVolume = unitVolume * qty;
 
                 const priceCell = document.getElementById(`row-price-${index}`);
                 const weightCell = document.getElementById(`row-weight-${index}`);
@@ -663,149 +503,52 @@
 
             document.getElementById('total-price').textContent = totalPrice.toLocaleString('ru-RU');
             document.getElementById('total-packs').textContent = totalPacks;
+            document.getElementById('total-weight').textContent = totalWeight.toFixed(2);
+            document.getElementById('total-volume').textContent = totalVolume.toFixed(4);
         }
 
-        // ============================================================
-        // 8. ОКРУГЛЕНИЕ ДО УПАКОВОК
-        // ============================================================
         function roundToPacks() {
-            let changed = false;
             const products = Object.entries(stocksData);
-            
             products.forEach(([name, item], index) => {
                 const qtyInput = document.getElementById(`qty-${index}`);
                 if (!qtyInput) return;
                 let qty = parseInt(qtyInput.value) || 0;
                 if (qty > 0 && item.pack) {
-                    const rounded = Math.ceil(qty / item.pack) * item.pack;
-                    if (rounded !== qty) {
-                        qtyInput.value = rounded;
-                        changed = true;
-                    }
+                    qtyInput.value = Math.ceil(qty / item.pack) * item.pack;
                 }
             });
-            
-            if (changed) {
-                updateTotals();
-                alert('✅ Количество округлено до полных упаковок.');
-            } else {
-                alert('ℹ️ Все позиции уже кратны упаковкам или корзина пуста.');
-            }
+            updateTotals();
         }
 
-        // ============================================================
-        // 9. МАСКА ТЕЛЕФОНА
-        // ============================================================
-        document.addEventListener('DOMContentLoaded', function() {
-            const phoneInput = document.getElementById('clientPhone');
-            
-            phoneInput.addEventListener('input', function() {
-                let value = this.value.replace(/\D/g, '');
-                if (value.startsWith('8')) value = '7' + value.slice(1);
-                if (!value.startsWith('7') && value.length > 0) value = '7' + value;
-                if (value.length > 11) value = value.slice(0, 11);
-
-                let formatted = '';
-                if (value.length > 0) formatted += '+7 ';
-                if (value.length > 1) formatted += '(' + value.slice(1, 4);
-                if (value.length >= 4) formatted += ') ' + value.slice(4, 7);
-                if (value.length >= 7) formatted += '-' + value.slice(7, 9);
-                if (value.length >= 9) formatted += '-' + value.slice(9, 11);
-                this.value = formatted;
-            });
-
-            phoneInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Backspace') {
-                    const pos = this.selectionStart;
-                    if (pos > 0 && this.value[pos - 1] === ' ') {
-                        this.value = this.value.slice(0, pos - 1) + this.value.slice(pos);
-                        this.selectionStart = pos - 1;
-                        this.selectionEnd = pos - 1;
-                    }
-                }
-            });
+        // Корректная маска телефона
+        document.getElementById('clientPhone').addEventListener('input', function (e) {
+            let x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
+            if (!x[2]) {
+                e.target.value = x[1] ? '+7 (' + x[1] : '';
+            } else {
+                e.target.value = '+7 (' + x[2] + (x[3] ? ') ' + x[3] : '') + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '');
+            }
         });
 
-        // ============================================================
-        // 10. УПРАВЛЕНИЕ ОБЯЗАТЕЛЬНОСТЬЮ EMAIL
-        // ============================================================
-        function toggleEmailRequired() {
-            const sendCopy = document.getElementById('sendCopy').checked;
-            const emailField = document.getElementById('clientEmail');
-            const hint = document.getElementById('emailRequiredHint');
-            
-            if (sendCopy) {
-                emailField.classList.add('required-field');
-                hint.classList.add('visible');
-                emailField.placeholder = 'Email для копии *';
-            } else {
-                emailField.classList.remove('required-field');
-                hint.classList.remove('visible');
-                emailField.placeholder = 'Email (для счета и копии)';
-            }
-        }
-
-        // ============================================================
-        // 11. ВАЛИДАЦИЯ ФОРМЫ
-        // ============================================================
-        function validateForm() {
-            const company = document.getElementById('clientCompany').value.trim();
-            const phoneRaw = document.getElementById('clientPhone').value.trim();
-            const email = document.getElementById('clientEmail').value.trim();
-            const sendCopy = document.getElementById('sendCopy').checked;
-
-            if (!company) {
-                alert('⚠️ Пожалуйста, укажите название компании.');
-                document.getElementById('clientCompany').classList.add('error-input');
-                document.getElementById('clientCompany').focus();
-                return false;
-            }
-            document.getElementById('clientCompany').classList.remove('error-input');
-
-            const phoneDigits = phoneRaw.replace(/\D/g, '');
-            if (phoneDigits.length !== 11) {
-                alert('⚠️ Введите номер телефона в формате +7 (XXX) XXX-XX-XX (11 цифр).');
-                document.getElementById('clientPhone').classList.add('error-input');
-                document.getElementById('clientPhone').focus();
-                return false;
-            }
-            document.getElementById('clientPhone').classList.remove('error-input');
-
-            if (sendCopy) {
-                if (email === '') {
-                    alert('⚠️ Укажите email, чтобы получить копию заказа.');
-                    document.getElementById('clientEmail').classList.add('error-input');
-                    document.getElementById('clientEmail').focus();
-                    return false;
-                }
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(email)) {
-                    alert('⚠️ Введите корректный email (например, client@domain.ru).');
-                    document.getElementById('clientEmail').classList.add('error-input');
-                    document.getElementById('clientEmail').focus();
-                    return false;
-                }
-            }
-            document.getElementById('clientEmail').classList.remove('error-input');
-
-            return true;
-        }
-
-        // ============================================================
-        // 12. ОТПРАВКА ЗАКАЗА
-        // ============================================================
         function sendOrder() {
-            if (!validateForm()) return;
-
             const company = document.getElementById('clientCompany').value.trim();
             const phone = document.getElementById('clientPhone').value.trim();
             const name = document.getElementById('clientName').value.trim() || 'Не указано';
-            const email = document.getElementById('clientEmail').value.trim() || '';
-            const comment = document.getElementById('clientComment').value.trim() || '';
-            const sendCopy = document.getElementById('sendCopy').checked;
+            const email = document.getElementById('clientEmail').value.trim();
+            const comment = document.getElementById('clientComment').value.trim();
+
+            if (!company) {
+                alert('⚠️ Пожалуйста, укажите название компании.');
+                document.getElementById('clientCompany').focus();
+                return;
+            }
+            if (phone.length < 16) {
+                alert('⚠️ Укажите корректный номер телефона.');
+                document.getElementById('clientPhone').focus();
+                return;
+            }
 
             let hasItems = false;
-            let totalWeight = 0, totalVolume = 0, totalPrice = 0, totalPacks = 0;
             let orderDetails = '';
             const products = Object.entries(stocksData);
 
@@ -814,97 +557,41 @@
                 const qty = parseInt(qtyInput ? qtyInput.value : 0) || 0;
                 if (qty > 0) {
                     hasItems = true;
-                    const rowPrice = item.price * qty;
-                    const rowWeight = item.weight * qty;
-                    const rowVolume = item.length * item.width * item.height * qty;
-                    const packs = Math.ceil(qty / (item.pack || 1));
-
-                    totalPrice += rowPrice;
-                    totalWeight += rowWeight;
-                    totalVolume += rowVolume;
-                    totalPacks += packs;
-
-                    orderDetails += `${model} | ${qty} шт. (${packs} упак.) | ${rowPrice.toLocaleString('ru-RU')} ₽ | вес: ${rowWeight.toFixed(2)} кг | объем: ${rowVolume.toFixed(4)} м³\n`;
+                    orderDetails += `${model} — ${qty} шт. (${item.price * qty} ₽)\n`;
                 }
             });
 
             if (!hasItems) {
-                alert('⚠️ Корзина пуста! Выберите хотя бы один товар перед отправкой.');
+                alert('⚠️ Ваша корзина пуста.');
                 return;
             }
-
-            let managerBody = '🔋 НОВЫЙ ЗАКАЗ АККУМУЛЯТОРОВ\n';
-            managerBody += '='.repeat(55) + '\n';
-            managerBody += `🏢 Компания: ${company}\n`;
-            managerBody += `👤 Контакт: ${name}\n`;
-            managerBody += `📞 Телефон: ${phone}\n`;
-            if (email) managerBody += `📧 Email: ${email}\n`;
-            if (comment) managerBody += `📝 Комментарий: ${comment}\n`;
-            managerBody += '\n📦 Состав заказа:\n';
-            managerBody += '-'.repeat(55) + '\n';
-            managerBody += orderDetails;
-            managerBody += '-'.repeat(55) + '\n';
-            managerBody += `💰 ИТОГО (с НДС 22%): ${totalPrice.toLocaleString('ru-RU')} ₽\n`;
-            managerBody += `⚖️ Общий вес: ${totalWeight.toFixed(2)} кг\n`;
-            managerBody += `📦 Общий объем: ${totalVolume.toFixed(4)} м³\n`;
-            managerBody += `📦 Количество упаковок: ${totalPacks}\n`;
-            managerBody += '='.repeat(55) + '\n';
-
-            const clientSubject = '✅ Ваш заказ аккумуляторов VEKTOR принят';
-            let clientBody = 'Здравствуйте!\n\n';
-            clientBody += 'Спасибо за ваш заказ в компании VEKTOR ENERGY. Мы получили вашу заявку и скоро свяжемся с вами для подтверждения деталей.\n\n';
-            clientBody += '📋 Состав вашего заказа:\n';
-            clientBody += '-'.repeat(30) + '\n';
-            
-            let clientOrderDetails = '';
-            products.forEach(([model, item], index) => {
-                const qtyInput = document.getElementById(`qty-${index}`);
-                const qty = parseInt(qtyInput ? qtyInput.value : 0) || 0;
-                if (qty > 0) {
-                    const rowPrice = item.price * qty;
-                    clientOrderDetails += `${model} | ${qty} шт. | ${rowPrice.toLocaleString('ru-RU')} ₽\n`;
-                }
-            });
-            clientBody += clientOrderDetails;
-            clientBody += '-'.repeat(30) + '\n';
-            clientBody += `💰 ИТОГО: ${totalPrice.toLocaleString('ru-RU')} ₽\n\n`;
-            clientBody += 'Наш менеджер свяжется с вами в ближайшее время для уточнения деталей доставки.\n\n';
-            clientBody += 'Если у вас есть вопросы, вы можете ответить на это письмо или связаться с нами по телефону: +7 (XXX) XXX-XX-XX.\n\n';
-            clientBody += 'С уважением,\n';
-            clientBody += 'Команда VEKTOR ENERGY';
 
             const btn = document.querySelector('.btn-submit');
             btn.disabled = true;
             btn.textContent = '⏳ Отправка...';
 
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwgq9pKQmt_dPJ0YLlKJGuF-tRo_GhYLa0oU2R0Z3n7_W5dRIoODcPlVHvVL8pmzQ51EA/exec';
-
             const payload = {
-                'company': company,
-                'contact': name,
-                'phone': phone,
-                'email': email,
-                'comment': comment,
-                'order': managerBody,
-                'client_copy': sendCopy ? 'yes' : 'no',
-                'client_email': email,
-                'client_subject': clientSubject,
-                'client_body': clientBody
+                company: company,
+                contact: name,
+                phone: phone,
+                email: email,
+                comment: comment,
+                order: `Компания: ${company}\nКонтакт: ${name}\nТел: ${phone}\nEmail: ${email}\nКоммент: ${comment}\n\nЗаказ:\n${orderDetails}`
             };
 
-            fetch(scriptURL, {
+            fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams(payload)
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             })
             .then(() => {
-                alert('✅ Заказ успешно отправлен!' + (sendCopy ? ' Копия направлена на ваш email.' : ''));
+                alert('✅ Заказ успешно оформлен! Менеджер свяжется с вами.');
                 clearAll();
             })
             .catch(error => {
-                alert('❌ Ошибка сети. Проверьте подключение к интернету и попробуйте еще раз.');
-                console.error('Ошибка:', error);
+                alert('❌ Ошибка отправки.');
+                console.error(error);
             })
             .finally(() => {
                 btn.disabled = false;
@@ -912,9 +599,6 @@
             });
         }
 
-        // ============================================================
-        // 13. ОЧИСТКА
-        // ============================================================
         function clearAll() {
             const products = Object.entries(stocksData);
             products.forEach((_, index) => {
@@ -926,28 +610,11 @@
             document.getElementById('clientName').value = '';
             document.getElementById('clientEmail').value = '';
             document.getElementById('clientComment').value = '';
-            document.getElementById('sendCopy').checked = false;
-            document.getElementById('searchInput').value = '';
-            filterCatalog();
-            document.getElementById('clientCompany').classList.remove('error-input');
-            document.getElementById('clientPhone').classList.remove('error-input');
-            document.getElementById('clientEmail').classList.remove('error-input');
-            toggleEmailRequired();
             updateTotals();
         }
 
-        // ============================================================
-        // 14. ЗАПУСК
-        // ============================================================
-        renderTable();
+        // Старт работы
         loadStocks();
-
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
-                e.preventDefault();
-            }
-        });
     </script>
-
 </body>
 </html>
