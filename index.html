@@ -427,29 +427,29 @@
         // 1. ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
         // ============================================================
         let stocksLoaded = false;
-        let products = [];
+        let products = {};
 
         // ============================================================
         // 2. ЗАГРУЗКА ДАННЫХ
         // ============================================================
         async function loadStocks() {
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbyvm2uB4MgNZqzD2WC-_geTa2PqM6tVIN5fC5nefOmxr7PHY8uWmHplBUH_FgYsiqRnug/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwgq9pKQmt_dPJ0YLlKJGuF-tRo_GhYLa0oU2R0Z3n7_W5dRIoODcPlVHvVL8pmzQ51EA/exec';
             
             try {
                 const response = await fetch(scriptURL);
                 const data = await response.json();
                 
-                if (data.result === 'success' && data.data && data.data.length > 0) {
+                if (data.result === 'success' && data.data && Object.keys(data.data).length > 0) {
                     products = data.data;
                     stocksLoaded = true;
                 } else {
                     stocksLoaded = false;
-                    products = [];
+                    products = {};
                 }
             } catch (error) {
                 console.warn('⚠️ Ошибка загрузки:', error);
                 stocksLoaded = false;
-                products = [];
+                products = {};
             }
             
             renderTable();
@@ -501,7 +501,9 @@
         const tbody = document.getElementById('catalog-body');
 
         function renderTable() {
-            if (products.length === 0) {
+            const productNames = Object.keys(products);
+            
+            if (productNames.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="20" style="text-align:center; padding:30px; color:#64748b;">📭 Данные временно недоступны. Попробуйте обновить страницу.</td></tr>`;
                 return;
             }
@@ -535,8 +537,8 @@
 
             // Строки
             let html = '';
-            products.forEach((item, index) => {
-                const name = item.name || 'Без названия';
+            productNames.forEach((name, index) => {
+                const item = products[name];
                 const stock = item.stock || 0;
                 
                 let stockDisplay = '';
@@ -620,10 +622,11 @@
         // ============================================================
         function filterCatalog() {
             const filter = document.getElementById('searchInput').value.toLowerCase().trim();
-            products.forEach((item, index) => {
+            const productNames = Object.keys(products);
+            productNames.forEach((name, index) => {
                 const row = document.getElementById(`row-${index}`);
                 if (row) {
-                    const match = item.name.toLowerCase().includes(filter);
+                    const match = name.toLowerCase().includes(filter);
                     row.style.display = match ? '' : 'none';
                 }
             });
@@ -634,8 +637,10 @@
         // ============================================================
         function updateTotals() {
             let totalWeight = 0, totalVolume = 0, totalPrice = 0, totalPacks = 0;
+            const productNames = Object.keys(products);
 
-            products.forEach((item, index) => {
+            productNames.forEach((name, index) => {
+                const item = products[name];
                 const qtyInput = document.getElementById(`qty-${index}`);
                 const qty = parseInt(qtyInput ? qtyInput.value : 0) || 0;
 
@@ -670,7 +675,9 @@
         // ============================================================
         function roundToPacks() {
             let changed = false;
-            products.forEach((item, index) => {
+            const productNames = Object.keys(products);
+            productNames.forEach((name, index) => {
+                const item = products[name];
                 const qtyInput = document.getElementById(`qty-${index}`);
                 if (!qtyInput) return;
                 let qty = parseInt(qtyInput.value) || 0;
@@ -793,15 +800,17 @@
             let hasItems = false;
             let orderDetails = '';
             let totalPrice = 0;
+            const productNames = Object.keys(products);
 
-            products.forEach((item, index) => {
+            productNames.forEach((name, index) => {
+                const item = products[name];
                 const qtyInput = document.getElementById(`qty-${index}`);
                 const qty = parseInt(qtyInput ? qtyInput.value : 0) || 0;
                 if (qty > 0) {
                     hasItems = true;
                     const rowPrice = item.price * qty;
                     totalPrice += rowPrice;
-                    orderDetails += `${item.name} | ${qty} шт. | ${rowPrice.toLocaleString('ru-RU')} ₽\n`;
+                    orderDetails += `${name} | ${qty} шт. | ${rowPrice.toLocaleString('ru-RU')} ₽\n`;
                 }
             });
 
@@ -814,7 +823,7 @@
             btn.disabled = true;
             btn.textContent = '⏳ Отправка...';
 
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbyvm2uB4MgNZqzD2WC-_geTa2PqM6tVIN5fC5nefOmxr7PHY8uWmHplBUH_FgYsiqRnug/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwgq9pKQmt_dPJ0YLlKJGuF-tRo_GhYLa0oU2R0Z3n7_W5dRIoODcPlVHvVL8pmzQ51EA/exec';
 
             const body = `Компания: ${company}\nКонтакт: ${name}\nТелефон: ${phone}\nEmail: ${email}\nКомментарий: ${comment}\n\nЗаказ:\n${orderDetails}\n\nИтого: ${totalPrice.toLocaleString('ru-RU')} ₽`;
 
@@ -853,7 +862,8 @@
         // 13. ОЧИСТКА
         // ============================================================
         function clearAll() {
-            products.forEach((_, index) => {
+            const productNames = Object.keys(products);
+            productNames.forEach((_, index) => {
                 const qtyInput = document.getElementById(`qty-${index}`);
                 if (qtyInput) qtyInput.value = 0;
             });
