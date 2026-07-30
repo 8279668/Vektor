@@ -540,8 +540,8 @@
         const data = await response.json();
         
         // Проверяем, что данные есть
-        if (data.result === 'success' && data.data && Object.keys(data.data).length > 0) {
-            stocksData = data.data;
+        if (data.result === 'success' && data.stocks && Object.keys(data.stocks).length > 0) {
+    stocksData = data.stocks;
             stocksLoaded = true;
             
             // Сопоставляем данные с товарами
